@@ -5,20 +5,24 @@
 // import New from "./pages/new/New";
 // import { BrowserRouter, Routes, Route } from "react-router-dom";
 // import { productInputs, userInputs } from "./formSource";
- 
-import Register from "./pages/club/register";
+
+// import Register from "./pages/club/register";
+import Login from "./pages/login/Login";
 import "./style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
+// import { Route } from "@mui/icons-material";
+import { BrowserRouter, Routes,Route, Navigate } from "react-router-dom";
+import CreateClub from "./pages/club/register";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
 
   return (
     <div className={darkMode ? "app dark" : "app"}>
-      {/* <BrowserRouter>
+      <BrowserRouter>
         <Routes>
-          <Route path="/">
+          {/* <Route path="/">
             <Route index element={<Home />} />
             <Route path="login" element={<Login />} />
             <Route path="users">
@@ -37,10 +41,12 @@ function App() {
                 element={<New inputs={productInputs} title="Add New Product" />}
               />
             </Route>
-          </Route>
+          </Route> */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/createClub" element={<CreateClub />} />
+          <Route path="/" element={<Navigate to="/login"/>}/>
         </Routes>
-      </BrowserRouter> */}
-      <Register />
+      </BrowserRouter>
     </div>
   );
 }
