@@ -13,7 +13,8 @@ import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 // import { Route } from "@mui/icons-material";
 import { BrowserRouter, Routes,Route, Navigate } from "react-router-dom";
-import CreateClub from "./pages/club/register";
+import CreateClub from "./pages/club/clubRegister";
+import ClubEvent from "./pages/events/clubEvent";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -44,6 +45,7 @@ function App() {
           </Route> */}
           <Route path="/login" element={<Login />} />
           <Route path="/createClub" element={<CreateClub />} />
+          <Route path="/clubEvent" element={<ClubEvent />} />
           <Route path="/" element={<Navigate to="/login"/>}/>
         </Routes>
       </BrowserRouter>
