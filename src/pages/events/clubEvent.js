@@ -6,6 +6,8 @@ import {
   Grid,
   TextField,
   Typography,
+  Autocomplete,
+  Switch,
 } from "@mui/material";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -17,15 +19,48 @@ import { prodUrl } from "../../config";
 import { user } from "../../localStore";
 
 const ChooseFile = styled.input`
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 `;
 const EventDesc = styled(TextField)`
-  margin-bottom: 5px !important;
+  margin-bottom: 10px !important;
 `;
 
-const ClubEvent = () => {
-  const [value, setValue] = useState("");
-  const [Time, setTime] = useState("");
+const ClubSelect = styled(Autocomplete)`
+  width: 100% !important;
+`;
+
+const CLUB_NAMES = [
+  {
+    key: 1,
+    name: "option 1",
+  },
+  {
+    key: 2,
+    name: "option 2",
+  },
+  {
+    key: 3,
+    name: "option 3",
+  },
+];
+
+const ClubEvent = (props) => {
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [club, setClub] = useState(null);
+
+  // const[name, value, ]
+
+  // console.log(club);
+
+  // const [ClubData, setClubData] = useState([])
+
+  //   useEffect(() => {
+  //     fetch(prodUrl+" /clubs")
+  //       .then((data) => data.json())
+  //       .then((data) => setClubData(data))
+
+  //   }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,13 +69,15 @@ const ClubEvent = () => {
 
     var formdata = new FormData();
     formdata.append("name", e.target.name.value);
-    formdata.append("date", e.target.date.value);
-    formdata.append("time", e.target.time.value);
+    formdata.append("date", e.target.name.value);
+    formdata.append("time", "12:00");
     formdata.append("clubId", "6322e56fb3ac64c6f9b87b6e");
-    formdata.append("clubName", e.target.clubname.value);
+    formdata.append("clubName", "kaddos");
     formdata.append("desc", e.target.desc.value);
-    formdata.append("venue", "kaali pahadi");
+    // formdata.append("venue", "kaali pahadi");
     formdata.append("file", e.target.pic.files[0]);
+
+    // console.log(club)
 
     var requestOptions = {
       method: "POST",
@@ -73,7 +110,7 @@ const ClubEvent = () => {
               <Grid container spacing={1}></Grid>
               <Grid item xs={12}>
                 <TextField
-                  sx={{ margin: "5px auto" }}
+                  sx={{ margin: "10px auto" }}
                   name="name"
                   label="Name"
                   placeholder="Enter Name"
@@ -84,14 +121,23 @@ const ClubEvent = () => {
               </Grid>
 
               <Grid item xs={12}>
-                <TextField
-                  sx={{ margin: "5px auto" }}
-                  name="clubname"
-                  label="Club Name"
-                  placeholder="Enter your Club Name"
-                  variant="outlined"
-                  fullWidth
-                  required
+                <ClubSelect
+                  disablePortal
+                  options={CLUB_NAMES}
+                  sx={{ width: 300, marginBottom: "10px" }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Club Name"
+                      name="clubname"
+                      required
+                    />
+                  )}
+                  getOptionLabel={(options) => options.name}
+                  value={club}
+                  onChange={(_event, newclub) => {
+                    setClub(newclub);
+                  }}
                 />
               </Grid>
 
@@ -99,15 +145,15 @@ const ClubEvent = () => {
                 <DatePicker
                   label="Pick Date"
                   placeholder="DD/MM/YYYY"
-                  name="date"
-                  value={value}
+                  // name="date"
+                  name={date}
                   onChange={(newValue) => {
-                    setValue(newValue);
+                    setDate(newValue);
                   }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      sx={{ marginBottom: "5px" }}
+                      sx={{ marginBottom: "10px" }}
                       fullWidth
                       required
                     />
@@ -118,15 +164,14 @@ const ClubEvent = () => {
               <Grid item xs={12}>
                 <TimePicker
                   label="Time"
-                  name="time"
-                  value={Time}
+                  value={time}
                   onChange={(newValue) => {
                     setTime(newValue);
                   }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      sx={{ marginBottom: "5px" }}
+                      sx={{ marginBottom: "10px" }}
                       required
                       fullWidth
                     />
@@ -136,7 +181,7 @@ const ClubEvent = () => {
 
               <Grid item xs={12}>
                 <TextField
-                  sx={{ margin: "5px auto" }}
+                  sx={{ margin: "10px auto" }}
                   name="venue"
                   label="Venue"
                   placeholder="Enter the venue"
@@ -159,6 +204,14 @@ const ClubEvent = () => {
 
               <Grid item xs={12}>
                 <ChooseFile name="pic" type="file" accept="image/*" />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Switch
+                  // checked={checked}
+                  // onChange={handleChange}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
               </Grid>
 
               <Grid item xs={12}>
