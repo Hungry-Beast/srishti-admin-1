@@ -1,0 +1,1 @@
+export const prodUrl="https://sonabyss.herokuapp.com"
