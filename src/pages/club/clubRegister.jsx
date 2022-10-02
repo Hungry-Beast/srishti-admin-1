@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Paper, TextField, Button } from "@mui/material";
 import { user } from "../../localStore";
+import { prodUrl } from "../../config";
 
 const ClubForm = styled.form`
   display: flex;
@@ -49,6 +50,7 @@ const CreateClub = () => {
     e.preventDefault();
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer "+ user.authToken);
+
     myHeaders.append("Content-Type", "application/json");
     console.log(e.target.poster.files)
     var formdata = new FormData();
@@ -66,7 +68,7 @@ const CreateClub = () => {
       redirect: "follow",
     };
 
-    fetch("https://sonabyss.herokuapp.com/clubs", requestOptions)
+    fetch(prodUrl + "/clubs", requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -78,7 +80,7 @@ const CreateClub = () => {
         <ClubInput
           name="clubname"
           label="Club Name"
-          variant="filled"
+          variant= "outlined"
           required
         />
         <ChoosePoster

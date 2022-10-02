@@ -9,6 +9,7 @@ import {
   Autocomplete,
   Switch,
 } from "@mui/material";
+// import dayjs from 'dayjs/locale/*'
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -45,32 +46,26 @@ const CLUB_NAMES = [
 ];
 
 const ClubEvent = (props) => {
+
+  // const [currentDate, currentTime] = ("");
+  // console.log(currentDate);
   const [date, setDate] = useState("");
+  var selectedDate = date.$D + "/" + (date.$M + 1) + "/" + date.$y;
+  console.log(selectedDate);
   const [time, setTime] = useState("");
   const [club, setClub] = useState(null);
 
-  // const[name, value, ]
-
-  // console.log(club);
-
-  // const [ClubData, setClubData] = useState([])
-
-  //   useEffect(() => {
-  //     fetch(prodUrl+" /clubs")
-  //       .then((data) => data.json())
-  //       .then((data) => setClubData(data))
-
-  //   }, [])
-
   const handleSubmit = (e) => {
     e.preventDefault();
+
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + user.authToken);
 
     var formdata = new FormData();
-    formdata.append("name", e.target.name.value);
-    formdata.append("date", e.target.name.value);
-    formdata.append("time", "12:00");
+    formdata.append("name", "gabbargang");
+    formdata.append("date", selectedDate);
+    // formdata.append("date", new Date(date));
+    formdata.append("time", "12:00 AM");
     formdata.append("clubId", "6322e56fb3ac64c6f9b87b6e");
     formdata.append("clubName", "kaddos");
     formdata.append("desc", e.target.desc.value);
@@ -107,7 +102,7 @@ const ClubEvent = (props) => {
         <Card sx={{ maxWidth: "450px", margin: "0 auto", padding: "20px 5px" }}>
           <CardContent>
             <form onSubmit={handleSubmit}>
-              <Grid container spacing={1}></Grid>
+              {/* <Grid container spacing={1}></Grid>
               <Grid item xs={12}>
                 <TextField
                   sx={{ margin: "10px auto" }}
@@ -139,9 +134,9 @@ const ClubEvent = (props) => {
                     setClub(newclub);
                   }}
                 />
-              </Grid>
+              </Grid> */}
 
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <DatePicker
                   label="Pick Date"
                   placeholder="DD/MM/YYYY"
@@ -159,9 +154,29 @@ const ClubEvent = (props) => {
                     />
                   )}
                 />
-              </Grid>
+              </Grid> */}
 
-              <Grid item xs={12}>
+
+              {/* Demo Code  */}
+
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Pick Date"
+                    views={['day', 'month', 'year']}
+                    placeholder="DD/MM/YYYY"
+                    value={date}
+                    onChange={(newValue) => {
+                      setDate(newValue);
+                      // console.log(Date(date));
+                    }}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+              </LocalizationProvider>
+
+              {/* Ends Here */}
+
+
+               <Grid item xs={12}>
                 <TimePicker
                   label="Time"
                   value={time}
@@ -178,7 +193,8 @@ const ClubEvent = (props) => {
                   )}
                 />
               </Grid>
-
+            
+              {/*
               <Grid item xs={12}>
                 <TextField
                   sx={{ margin: "10px auto" }}
@@ -190,6 +206,7 @@ const ClubEvent = (props) => {
                   required
                 />
               </Grid>
+                  */}
 
               <Grid item xs={12}>
                 <EventDesc
@@ -206,13 +223,13 @@ const ClubEvent = (props) => {
                 <ChooseFile name="pic" type="file" accept="image/*" />
               </Grid>
 
-              <Grid item xs={12}>
+            {/*  <Grid item xs={12}>
                 <Switch
                   // checked={checked}
                   // onChange={handleChange}
                   inputProps={{ "aria-label": "controlled" }}
                 />
-              </Grid>
+              </Grid> */}
 
               <Grid item xs={12}>
                 <Button
