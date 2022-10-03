@@ -11,17 +11,17 @@ import {
 } from "@mui/material";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import { prodUrl } from "../../config";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = () => setShowPassword(!showPassword);
-  const handleSubmit = (e) =>{
-
+  const handleSubmit = (e) => {
     e.preventDefault();
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    
 
     var raw = JSON.stringify({
       regNo: e.target.regNo.value,
@@ -35,11 +35,17 @@ const Login = () => {
       redirect: "follow",
     };
 
-    fetch(prodUrl+"/api/auth/login", requestOptions)
+    fetch(prodUrl + "/api/auth/login", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        localStorage.setItem('user',JSON.stringify(result))
-        console.log(result)
+        console.log(result);
+        if (result.success) {
+          localStorage.setItem("user", JSON.stringify(result));
+          navigate("/");
+        }
+        else{
+          throw new Error(result.error)
+        }
       })
       .catch((error) => console.log("error", error));
   };

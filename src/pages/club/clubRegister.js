@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Paper, TextField, Button } from "@mui/material";
 import { user } from "../../localStore";
+import { prodUrl } from "../../config";
 
 const ClubForm = styled.form`
   display: flex;
@@ -48,14 +49,12 @@ const CreateClub = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     var myHeaders = new Headers();
-    myHeaders.append("Authorization", "Bearer "+ user.authToken);
-    myHeaders.append("Content-Type", "application/json");
-    console.log(e.target.poster.files)
-    var formdata = new FormData();
-    formdata.append(
-      "file",
-      e.target.poster.files[0]
-    );
+    
+    myHeaders.append("Authorization", "Bearer " + user.authToken);
+    // myHeaders.append("Content-Type", "application/json");
+    console.log(e.target.poster.files);
+    const formdata = new FormData();
+    formdata.append("file", e.target.poster.files[0]);
     formdata.append("name", e.target.clubname.value);
     formdata.append("desc", e.target.desc.value);
 
@@ -63,10 +62,9 @@ const CreateClub = () => {
       method: "POST",
       headers: myHeaders,
       body: formdata,
-      redirect: "follow",
     };
 
-    fetch("https://sonabyss.herokuapp.com/clubs", requestOptions)
+    fetch(prodUrl + "/clubs", requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
@@ -81,13 +79,11 @@ const CreateClub = () => {
           variant="filled"
           required
         />
-        <ChoosePoster
-          name="poster"
-          type="file"
-          accept="image/*"
-        />
+        <ChoosePoster name="poster" type="file" accept="image/*" />
         <ClubDescription multiline rows={5} name="desc" label="Desc ..." />
-        <ClubButton type="submit" variant="contained">Submit</ClubButton>
+        <ClubButton type="submit" variant="contained">
+          Submit
+        </ClubButton>
       </ClubPaper>
     </ClubForm>
   );

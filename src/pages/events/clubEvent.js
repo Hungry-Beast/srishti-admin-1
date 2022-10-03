@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -47,20 +47,31 @@ const CLUB_NAMES = [
 const ClubEvent = (props) => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
-  const [club, setClub] = useState(null);
+  const [club, setClub] = useState([]);
 
   // const[name, value, ]
 
   // console.log(club);
 
-  // const [ClubData, setClubData] = useState([])
-
-  //   useEffect(() => {
-  //     fetch(prodUrl+" /clubs")
-  //       .then((data) => data.json())
-  //       .then((data) => setClubData(data))
-
-  //   }, [])
+  const [clubData, setClubData] = useState([]);
+  const getClub = () => {
+    fetch(prodUrl + "/clubs")
+      .then((data) => data.json())
+      .then((data) => {
+        console.log(data);
+        let clubs = [];
+        data.map((club) => {
+          clubs.push({
+            label: club.name,
+            value: club["_id"],
+          });
+        });
+        setClubData(data);
+      });
+  };
+  useEffect(() => {
+    getClub();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -123,7 +134,7 @@ const ClubEvent = (props) => {
               <Grid item xs={12}>
                 <ClubSelect
                   disablePortal
-                  options={CLUB_NAMES}
+                  options={clubData}
                   sx={{ width: 300, marginBottom: "10px" }}
                   renderInput={(params) => (
                     <TextField

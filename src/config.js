@@ -1,1 +1,1 @@
-export const prodUrl="https://sonabyss.herokuapp.com"
+export const prodUrl="http://localhost:5000"
