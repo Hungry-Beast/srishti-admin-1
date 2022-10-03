@@ -8,7 +8,12 @@ import {
   Typography,
   Autocomplete,
   Switch,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
+// import dayjs from 'dayjs/locale/*'
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -17,6 +22,7 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import styled from "styled-components";
 import { prodUrl } from "../../config";
 import { user } from "../../localStore";
+import { clubs } from "../../data";
 
 const ChooseFile = styled.input`
   margin-bottom: 10px;
@@ -25,70 +31,82 @@ const EventDesc = styled(TextField)`
   margin-bottom: 10px !important;
 `;
 
-const ClubSelect = styled(Autocomplete)`
-  width: 100% !important;
+const ClubSelect = styled(Select)`
+  width: 100%;
+  /* margin: 1rem 0; */
 `;
 
-const CLUB_NAMES = [
-  {
-    key: 1,
-    name: "option 1",
-  },
-  {
-    key: 2,
-    name: "option 2",
-  },
-  {
-    key: 3,
-    name: "option 3",
-  },
-];
-
 const ClubEvent = (props) => {
+  // Handling DatePicker
   const [date, setDate] = useState("");
+  var selectedDate = date.$D + "/" + (date.$M + 1) + "/" + date.$y;
+  // console.log(selectedDate);
+
+  // handle timePicker
   const [time, setTime] = useState("");
   const [club, setClub] = useState([]);
 
-  // const[name, value, ]
+  const selecetdTime = {
+    Time: time && time.$d.toLocaleTimeString(),
+  };
+  // console.log(selecetdTime.Time);
 
-  // console.log(club);
+  // handle clubname selection
+  // const [club, setClub] = useState(null);
+  console.log(club);
 
   const [clubData, setClubData] = useState([]);
+  const flatProps = {
+    options: clubData.map((option) => option.title),
+  };
   const getClub = () => {
     fetch(prodUrl + "/clubs")
       .then((data) => data.json())
       .then((data) => {
         console.log(data);
-        let clubs = [];
+        let clubsList = [];
         data.map((club) => {
-          clubs.push({
+          clubsList.push({
             label: club.name,
             value: club["_id"],
           });
         });
-        setClubData(data);
+        setClubData(clubsList);
       });
   };
   useEffect(() => {
     getClub();
   }, []);
 
+  // For Switch
+  const [checked, setChecked] = React.useState(true);
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
+
+  // Handle Form Submit
   const handleSubmit = (e) => {
     e.preventDefault();
+
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + user.authToken);
 
     var formdata = new FormData();
-    formdata.append("name", e.target.name.value);
-    formdata.append("date", e.target.name.value);
+    // formdata.append("name", "gabbargang");
+
+    // formdata.append("date", selectedDate);
+    formdata.append("date", "13-10-2022");
+    // formdata.append("time", selecetdTime.Time);
     formdata.append("time", "12:00");
-    formdata.append("clubId", "6322e56fb3ac64c6f9b87b6e");
-    formdata.append("clubName", "kaddos");
-    formdata.append("desc", e.target.desc.value);
-    // formdata.append("venue", "kaali pahadi");
+    formdata.append("club", "6322e56fb3ac64c6f9b87b6e");
+    formdata.append("clubName", "name");
+    // formdata.append("desc", e.target.desc.value);
+    formdata.append("desc", "hhhhh");
+    // formdata.append("file", e.target.pic.files[0]);
     formdata.append("file", e.target.pic.files[0]);
 
-    // console.log(club)
+    // formdata.append("venue", "kaali pahadi");
+    // formdata.append("SwitchButton", "checked");
 
     var requestOptions = {
       method: "POST",
@@ -104,60 +122,84 @@ const ClubEvent = (props) => {
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div>
-        <Typography
-          gutterBottom
-          variant="h3"
-          align="center"
-          sx={{ fontFamily: "Roboto" }}
-        >
-          Club Events
-        </Typography>
+    <div>
+      <Typography
+        gutterBottom
+        variant="h3"
+        align="center"
+        sx={{ fontFamily: "Roboto" }}
+      >
+        Club Events
+      </Typography>
 
-        <Card sx={{ maxWidth: "450px", margin: "0 auto", padding: "20px 5px" }}>
-          <CardContent>
-            <form onSubmit={handleSubmit}>
-              <Grid container spacing={1}></Grid>
-              <Grid item xs={12}>
-                <TextField
-                  sx={{ margin: "10px auto" }}
-                  name="name"
-                  label="Name"
-                  placeholder="Enter Name"
-                  variant="outlined"
-                  fullWidth
-                  required
-                />
-              </Grid>
+      <Card sx={{ maxWidth: "450px", margin: "0 auto", padding: "20px 5px" }}>
+        <CardContent>
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={1}></Grid>
+            <Grid item xs={12}>
+              <TextField
+                sx={{ margin: "10px auto" }}
+                name="name"
+                label="Name"
+                placeholder="Enter Name"
+                variant="outlined"
+                fullWidth
+                // required
+              />
+            </Grid>
 
-              <Grid item xs={12}>
+            <Grid item xs={12}>
+              {/* <Autocomplete
+                sx={{ marginBottom: "10px" }}
+                {...flatProps}
+                id="controlled-demo"
+                value={club}
+                onChange={(event, newValue) => {
+                  setClub(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Club Name"
+                    placeholder="Enter club name"
+                    variant="outlined"
+                  />
+                )}
+                fullWidth
+                // required
+              /> */}
+              <FormControl
+                fullWidth
+                sx={{ minWidth: "100%", margin: "1rem 0" }}
+              >
+                <InputLabel id="demo-simple-select-standard-label">
+                  Club
+                </InputLabel>
                 <ClubSelect
-                  disablePortal
-                  options={clubData}
-                  sx={{ width: 300, marginBottom: "10px" }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Club Name"
-                      name="clubname"
-                      required
-                    />
-                  )}
-                  getOptionLabel={(options) => options.name}
+                  labelId="demo-simple-select-standard-label"
+                  id="demo-simple-select-standard"
+                  // label="Club"
+                  label="Club"
                   value={club}
-                  onChange={(_event, newclub) => {
-                    setClub(newclub);
+                  onChange={(e) => {
+                    setClub(e.target.value);
                   }}
-                />
-              </Grid>
+                >
+                  {clubData.length !== 0 &&
+                    clubData.map((club) => (
+                      <MenuItem value={club.value}>{club.label}</MenuItem>
+                    ))}
+                </ClubSelect>
+              </FormControl>
+            </Grid>
 
-              <Grid item xs={12}>
+            <Grid item xs={12}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Pick Date"
-                  placeholder="DD/MM/YYYY"
-                  // name="date"
-                  name={date}
+                  views={["day", "month", "year"]}
+                  placeholder="MM/DD/YYYY"
+                  value={date}
                   onChange={(newValue) => {
                     setDate(newValue);
                   }}
@@ -166,80 +208,76 @@ const ClubEvent = (props) => {
                       {...params}
                       sx={{ marginBottom: "10px" }}
                       fullWidth
-                      required
                     />
                   )}
                 />
-              </Grid>
+              </LocalizationProvider>
+            </Grid>
 
-              <Grid item xs={12}>
+            <Grid item xs={12}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <TimePicker
-                  label="Time"
+                  label="Pick Time"
+                  ampm={false}
+                  placeholder="Pick time of event"
                   value={time}
                   onChange={(newValue) => {
                     setTime(newValue);
                   }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      sx={{ marginBottom: "10px" }}
-                      required
-                      fullWidth
-                    />
-                  )}
+                  renderInput={(params) => <TextField {...params} fullWidth />}
                 />
-              </Grid>
+              </LocalizationProvider>
+            </Grid>
 
-              <Grid item xs={12}>
-                <TextField
-                  sx={{ margin: "10px auto" }}
-                  name="venue"
-                  label="Venue"
-                  placeholder="Enter the venue"
-                  variant="outlined"
-                  fullWidth
-                  required
-                />
-              </Grid>
+            <Grid item xs={12}>
+              <TextField
+                sx={{ margin: "10px auto" }}
+                name="venue"
+                label="Venue"
+                placeholder="Enter the venue"
+                variant="outlined"
+                fullWidth
+                // required
+              />
+            </Grid>
 
-              <Grid item xs={12}>
-                <EventDesc
-                  multiline
-                  rows={5}
-                  name="desc"
-                  label="Desc ..."
-                  fullWidth
-                  required
-                />
-              </Grid>
+            <Grid item xs={12}>
+              <EventDesc
+                multiline
+                rows={5}
+                name="desc"
+                label="Desc ..."
+                fullWidth
+                // required
+              />
+            </Grid>
 
-              <Grid item xs={12}>
-                <ChooseFile name="pic" type="file" accept="image/*" />
-              </Grid>
+            <Grid item xs={12}>
+              <ChooseFile name="pic" type="file" accept="image/*" />
+            </Grid>
 
-              <Grid item xs={12}>
-                <Switch
-                  // checked={checked}
-                  // onChange={handleChange}
-                  inputProps={{ "aria-label": "controlled" }}
-                />
-              </Grid>
+            <Grid item xs={12}>
+              <Switch
+                checked={checked}
+                onChange={handleChange}
+                inputProps={{ "aria-label": "controlled" }}
+              />
+            </Grid>
 
-              <Grid item xs={12}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                >
-                  Submit
-                </Button>
-              </Grid>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    </LocalizationProvider>
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+              >
+                Submit
+              </Button>
+            </Grid>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

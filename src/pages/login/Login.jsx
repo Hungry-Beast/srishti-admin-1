@@ -8,6 +8,9 @@ import {
   Typography,
   InputAdornment,
   IconButton,
+  OutlinedInput,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import { prodUrl } from "../../config";
@@ -16,8 +19,9 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const handleClickShowPassword = () => setShowPassword(!showPassword);
-  const handleMouseDownPassword = () => setShowPassword(!showPassword);
+  // const handleClickShowPassword = () => setShowPassword(!showPassword);
+  // const handleMouseDownPassword = () => setShowPassword(!showPassword);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     var myHeaders = new Headers();
@@ -46,9 +50,31 @@ const Login = () => {
         else{
           throw new Error(result.error)
         }
+
       })
       .catch((error) => console.log("error", error));
   };
+
+  const [values, setValues] = useState({
+    password: "",
+    showPassword: false,
+  });
+
+  const handleChange = (prop) => (event) => {
+    setValues({ ...values, [prop]: event.target.value });
+  };
+
+  const handleClickShowPassword = () => {
+    setValues({
+      ...values,
+      showPassword: !values.showPassword,
+    });
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <div>
       <Typography
@@ -77,31 +103,38 @@ const Login = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <TextField
-                name="pass"
-                sx={{ marginBottom: "5px" }}
-                label="Password"
-                variant="outlined"
-                placeholder="Enter your password"
-                type={showPassword ? "text" : "password"}
-                // onChange={someChangeHandler}
-                // InputProps={{
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-                // }}
-                fullWidth
-                required
-              />
+              <FormControl variant="outlined" fullWidth>
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Password
+                </InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  sx={{ marginBottom: "5px" }}
+                  type={values.showPassword ? "text" : "password"}
+                  value={values.password}
+                  onChange={handleChange("password")}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {values.showPassword ? (
+                          <VisibilityOff />
+                        ) : (
+                          <Visibility />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                  placeholder="Enter your password"
+                  name="pass"
+                  required
+                />
+              </FormControl>
             </Grid>
 
             <Grid item xs={12}>

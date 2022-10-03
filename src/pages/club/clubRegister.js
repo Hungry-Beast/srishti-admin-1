@@ -49,12 +49,12 @@ const CreateClub = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     var myHeaders = new Headers();
-    
     myHeaders.append("Authorization", "Bearer " + user.authToken);
     // myHeaders.append("Content-Type", "application/json");
     console.log(e.target.poster.files);
     const formdata = new FormData();
     formdata.append("file", e.target.poster.files[0]);
+
     formdata.append("name", e.target.clubname.value);
     formdata.append("desc", e.target.desc.value);
 
@@ -76,7 +76,7 @@ const CreateClub = () => {
         <ClubInput
           name="clubname"
           label="Club Name"
-          variant="filled"
+          variant="outlined"
           required
         />
         <ChoosePoster name="poster" type="file" accept="image/*" />
