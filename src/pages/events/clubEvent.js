@@ -94,8 +94,9 @@ const ClubEvent = (props) => {
     var formdata = new FormData();
     // formdata.append("name", "gabbargang");
 
-    // formdata.append("date", selectedDate);
-    formdata.append("date", "13-10-2022");
+    formdata.append("date", selectedDate);
+
+    // formdata.append("date", "13-10-2022");
     // formdata.append("time", selecetdTime.Time);
     formdata.append("time", "12:00");
     formdata.append("club", "6322e56fb3ac64c6f9b87b6e");
@@ -120,6 +121,7 @@ const ClubEvent = (props) => {
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
   };
+  console.log(club);
 
   return (
     <div>
