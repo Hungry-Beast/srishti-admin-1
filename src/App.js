@@ -22,21 +22,23 @@ function App() {
           </Route> */}
           <Route path="/login" element={<Login />} />
           {/* <Route path="/downloadPdf" element={<DownloadPdf />} /> */}
-          <Route path="/createClub" element={<CreateClub />} />
-          <Route path="/clubEvent" element={<ClubEvent />} />
-          {/* <<<<<<< HEAD */}
-          <Route path="/" element={<Navigate to={user ? "/home" : "/login"} />} />
-          <Route index element={<Home />} />
+          <Route
+            path="/createClub"
+            element={user ? <CreateClub /> : <Navigate to="/login" />}
+          />
+          <Route path="/clubEvent" element={user?<ClubEvent />: <Navigate to="/login" />}/>
+          <Route path="/" element={<Navigate to={user ? "/" : "/login"} />} />
+          <Route index element={ <Home />} />
           <Route path="/events">
+            {/* <Route index element={<List />} /> */}
             <Route path=":clubId" element={<Single1 />} />
           </Route>
-          <Route path='/registration'>
-            <Route path=':eventId' element={<List />} />
-
+          <Route path="/registration">
+            <Route path=":eventId" element={<List />} />
           </Route>
         </Routes>
-      </BrowserRouter >
-    </div >
+      </BrowserRouter>
+    </div>
   );
 }
 

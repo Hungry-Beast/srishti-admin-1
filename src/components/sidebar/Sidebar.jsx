@@ -9,6 +9,8 @@ import { useContext } from "react";
 import { useState } from "react";
 import { prodUrl } from "../../config";
 import { useEffect } from "react";
+import { Button } from "@mui/material";
+import { Add } from "@mui/icons-material";
 
 const Sidebar = () => {
   const { dispatch } = useContext(DarkModeContext);
@@ -24,7 +26,7 @@ const Sidebar = () => {
     <div className="sidebar">
       <div className="top">
         <Link to="/" style={{ textDecoration: "none" }}>
-          <span className="logo">lamadmin</span>
+          <span className="logo">Sonabyss Admin</span>
         </Link>
       </div>
       <hr />
@@ -39,6 +41,9 @@ const Sidebar = () => {
             to={`/events/${clubsList[0]?._id}`}
             style={{ textDecoration: "none" }}>
             <p className="title">CLUBS</p>
+          </Link>
+          <Link to='/createClub'>
+          <Button variant="content"><Add/>Add Club</Button>
           </Link>
           {clubsList?.map((ele, i) => {
             return (

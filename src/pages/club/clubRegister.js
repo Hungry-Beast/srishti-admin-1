@@ -14,7 +14,7 @@ const ClubPaper = styled(Paper)`
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
-  background-color: red;
+  /* background-color: red; */
 
   padding: 2em 3em;
   /* border: 2px solid red; */

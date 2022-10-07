@@ -34,7 +34,6 @@ const Login = () => {
 
     var raw = JSON.stringify({
       phoneNo: e.target.phoneNo.value,
-      regNo:"220/039",
       password: e.target.pass.value,
     });
 
@@ -52,6 +51,7 @@ const Login = () => {
         console.log(result);
         if (result.success) {
           localStorage.setItem("user", JSON.stringify(result));
+          console.log("Hi")
           navigate("/");
         } else {
           throw new Error(result.error);

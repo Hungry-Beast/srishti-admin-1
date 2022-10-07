@@ -58,6 +58,7 @@ const Datatable = () => {
       fetch(url, requestOptions)
         .then((response) => response.json())
         .then((data) => {
+          console.log(data)
           setNewData(data.map((e, i) => ({ ...e, id: i + 1 })));
           setLoading(false);
         })
