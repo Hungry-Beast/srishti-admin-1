@@ -1,8 +1,7 @@
 import "./single.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
-import Chart from "../../components/chart/Chart";
-import List from "../../components/table/Table";
+
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { prodUrl } from "../../config";
 import { React, useEffect, useState } from "react";

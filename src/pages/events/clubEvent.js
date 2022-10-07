@@ -39,12 +39,13 @@ const ClubSelect = styled(Select)`
 const ClubEvent = (props) => {
   // Handling DatePicker
   const [date, setDate] = useState("");
-  var selectedDate = date.$D + "/" + (date.$M + 1) + "/" + date.$y;
+
   // console.log(selectedDate);
 
   // handle timePicker
   const [time, setTime] = useState("");
   const [club, setClub] = useState([]);
+  const [checked, setChecked] = useState(true);
 
   const selecetdTime = {
     Time: time && time.$d.toLocaleTimeString(),
@@ -53,7 +54,7 @@ const ClubEvent = (props) => {
 
   // handle clubname selection
   // const [club, setClub] = useState(null);
-  console.log(club);
+  // console.log(club);
 
   const [clubData, setClubData] = useState([]);
   const flatProps = {
@@ -63,7 +64,7 @@ const ClubEvent = (props) => {
     fetch(prodUrl + "/clubs")
       .then((data) => data.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         let clubsList = [];
         data.map((club) => {
           clubsList.push({
@@ -79,7 +80,6 @@ const ClubEvent = (props) => {
   }, []);
 
   // For Switch
-  const [checked, setChecked] = React.useState(true);
   const handleChange = (event) => {
     setChecked(event.target.checked);
   };
@@ -90,24 +90,32 @@ const ClubEvent = (props) => {
 
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + user.authToken);
-
+    var selectedDate = date.$D + "/" + (date.$M + 1) + "/" + date.$y;
+    const hrs =
+      time.$d.getHours() < 10 ? "0" + time.$d.getHours() : time.$d.getHours();
+    const mins =
+      time.$d.getMinutes() < 10
+        ? "0" + time.$d.getMinutes()
+        : time.$d.getMinutes();
+    const newSelectedTime = hrs + ":" + mins;
+    const selectedClub = clubData.find((clubData) => clubData.value === club);
+    console.log(selectedClub);
     var formdata = new FormData();
-    // formdata.append("name", "gabbargang");
+    formdata.append("name", e.target.name.value);
 
     formdata.append("date", selectedDate);
 
     // formdata.append("date", "13-10-2022");
-    // formdata.append("time", selecetdTime.Time);
-    formdata.append("time", "12:00");
-    formdata.append("club", "6322e56fb3ac64c6f9b87b6e");
-    formdata.append("clubName", "name");
-    // formdata.append("desc", e.target.desc.value);
-    formdata.append("desc", "hhhhh");
-    // formdata.append("file", e.target.pic.files[0]);
+    formdata.append("time", newSelectedTime);
+    // formdata.append("time", "12:00");
+    formdata.append("clubId", club);
+    formdata.append("clubName", selectedClub.label);
+    formdata.append("desc", e.target.desc.value);
+
     formdata.append("file", e.target.pic.files[0]);
 
-    // formdata.append("venue", "kaali pahadi");
-    // formdata.append("SwitchButton", "checked");
+    formdata.append("venue", e.target.venue.value);
+    formdata.append("isOpen", checked);
 
     var requestOptions = {
       method: "POST",
@@ -151,25 +159,6 @@ const ClubEvent = (props) => {
             </Grid>
 
             <Grid item xs={12}>
-              {/* <Autocomplete
-                sx={{ marginBottom: "10px" }}
-                {...flatProps}
-                id="controlled-demo"
-                value={club}
-                onChange={(event, newValue) => {
-                  setClub(newValue);
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Club Name"
-                    placeholder="Enter club name"
-                    variant="outlined"
-                  />
-                )}
-                fullWidth
-                // required
-              /> */}
               <FormControl
                 fullWidth
                 sx={{ minWidth: "100%", margin: "1rem 0" }}
@@ -199,10 +188,10 @@ const ClubEvent = (props) => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Pick Date"
-                  views={["day", "month", "year"]}
                   placeholder="MM/DD/YYYY"
                   value={date}
                   onChange={(newValue) => {
+                    // console.log(newValue.D)
                     setDate(newValue);
                   }}
                   renderInput={(params) => (
@@ -220,7 +209,7 @@ const ClubEvent = (props) => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <TimePicker
                   label="Pick Time"
-                  ampm={false}
+                  // ampm={false}
                   placeholder="Pick time of event"
                   value={time}
                   onChange={(newValue) => {

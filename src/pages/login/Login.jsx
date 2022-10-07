@@ -34,6 +34,7 @@ const Login = () => {
 
     var raw = JSON.stringify({
       phoneNo: e.target.phoneNo.value,
+      regNo:"220/039",
       password: e.target.pass.value,
     });
 
