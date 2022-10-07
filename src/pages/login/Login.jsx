@@ -11,19 +11,24 @@ import {
   OutlinedInput,
   InputLabel,
   FormControl,
+  CircularProgress,
+  Backdrop,
 } from "@mui/material";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import { prodUrl } from "../../config";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
   const navigate = useNavigate();
   // const handleClickShowPassword = () => setShowPassword(!showPassword);
   // const handleMouseDownPassword = () => setShowPassword(!showPassword);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setisLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -39,20 +44,26 @@ const Login = () => {
       redirect: "follow",
     };
 
-    fetch(prodUrl + "/api/auth/login", requestOptions)
+    fetch(prodUrl + "/auth/login", requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        setisLoading(false);
         console.log(result);
         if (result.success) {
           localStorage.setItem("user", JSON.stringify(result));
           navigate("/");
+        } else {
+          throw new Error(result.error);
         }
-        else{
-          throw new Error(result.error)
-        }
-
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => {
+        Swal.fire(
+          "Incorrect Password",
+          "Please use correct credential",
+          "error"
+        );
+        console.log("error", error);
+      });
   };
 
   const [values, setValues] = useState({
@@ -148,6 +159,12 @@ const Login = () => {
               </Button>
             </Grid>
           </form>
+          <Backdrop
+            sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={isLoading}
+          >
+            <CircularProgress color="inherit" />
+          </Backdrop>
         </CardContent>
       </Card>
     </div>
