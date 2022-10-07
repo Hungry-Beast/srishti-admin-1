@@ -14,7 +14,12 @@ import { DarkModeContext } from "./context/darkModeContext";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import CreateClub from "./pages/club/clubRegister";
 import ClubEvent from "./pages/events/clubEvent";
+// <<<<<<< HEAD
 import Single1 from "./pages/single/Single1";
+// =======
+// import DownloadPdf from "./pages/events/DownloadPdf";
+import { user } from "./localStore";
+// >>>>>>> 112e5caf2004bf5a6ff7d3e2de252a5e74b9ad6b
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -27,9 +32,11 @@ function App() {
             <Route path="login" element={<Login />} />
           </Route> */}
           <Route path="/login" element={<Login />} />
+          {/* <Route path="/downloadPdf" element={<DownloadPdf />} /> */}
           <Route path="/createClub" element={<CreateClub />} />
           <Route path="/clubEvent" element={<ClubEvent />} />
-          <Route path="/" element={<Navigate to="/login" />} />
+          {/* <<<<<<< HEAD */}
+          <Route path="/" element={<Navigate to={user ? "/home" : "/login"} />} />
           <Route index element={<Home />} />
           <Route path="/events">
             {/* <Route index element={<List />} /> */}
@@ -37,10 +44,11 @@ function App() {
           </Route>
           <Route path='/registration'>
             <Route path=':eventId' element={<List />} />
+
           </Route>
         </Routes>
-      </BrowserRouter>
-    </div>
+      </BrowserRouter >
+    </div >
   );
 }
 
