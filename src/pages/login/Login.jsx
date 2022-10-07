@@ -33,7 +33,7 @@ const Login = () => {
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-      regNo: e.target.regNo.value,
+      phoneNo: e.target.phoneNo.value,
       password: e.target.pass.value,
     });
 
@@ -92,8 +92,7 @@ const Login = () => {
         gutterBottom
         variant="h3"
         align="center"
-        sx={{ fontFamily: "Roboto" }}
-      >
+        sx={{ fontFamily: "Roboto" }}>
         Login Page
       </Typography>
       <Card sx={{ maxWidth: "450px", margin: "0 auto", padding: "20px 5px" }}>
@@ -104,9 +103,10 @@ const Login = () => {
             <Grid item xs={12}>
               <TextField
                 sx={{ margin: "5px auto" }}
-                name="regNo"
-                label="Registration no"
-                placeholder="Enter your registration no"
+                name="phoneNo"
+                label="Phone No."
+                placeholder="Enter your Phone Number"
+                type={"number"}
                 variant="outlined"
                 fullWidth
                 required
@@ -130,8 +130,7 @@ const Login = () => {
                         aria-label="toggle password visibility"
                         onClick={handleClickShowPassword}
                         onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
+                        edge="end">
                         {values.showPassword ? (
                           <VisibilityOff />
                         ) : (
@@ -153,8 +152,7 @@ const Login = () => {
                 type="submit"
                 variant="contained"
                 color="primary"
-                fullWidth
-              >
+                fullWidth>
                 Submit
               </Button>
             </Grid>
