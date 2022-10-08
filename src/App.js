@@ -26,9 +26,10 @@ function App() {
             path="/createClub"
             element={user ? <CreateClub /> : <Navigate to="/login" />}
           />
-          <Route path="/clubEvent" element={user?<ClubEvent />: <Navigate to="/login" />}/>
+          <Route path="/clubEvent" element={user ? <ClubEvent /> : <Navigate to="/login" />} />
           <Route path="/" element={<Navigate to={user ? "/" : "/login"} />} />
-          <Route index element={ <Home />} />
+          <Route indexcypher25
+            element={<Home />} />
           <Route path="/events">
             {/* <Route index element={<List />} /> */}
             <Route path=":clubId" element={<Single1 />} />

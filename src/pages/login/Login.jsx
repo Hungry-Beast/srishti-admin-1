@@ -44,14 +44,14 @@ const Login = () => {
       redirect: "follow",
     };
 
-    fetch(prodUrl + "/auth/login", requestOptions)
+    fetch(prodUrl + "/api/auth/login", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setisLoading(false);
         console.log(result);
         if (result.success) {
           localStorage.setItem("user", JSON.stringify(result));
-          console.log("Hi")
+          console.log("Hi");
           navigate("/");
         } else {
           throw new Error(result.error);
@@ -160,8 +160,7 @@ const Login = () => {
           </form>
           <Backdrop
             sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={isLoading}
-          >
+            open={isLoading}>
             <CircularProgress color="inherit" />
           </Backdrop>
         </CardContent>
