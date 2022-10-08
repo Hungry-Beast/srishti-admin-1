@@ -52,7 +52,7 @@ const Login = () => {
         if (result.success) {
           localStorage.setItem("user", JSON.stringify(result));
           console.log("Hi")
-          navigate("/");
+          navigate("/home");
         } else {
           throw new Error(result.error);
         }
