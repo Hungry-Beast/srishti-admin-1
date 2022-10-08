@@ -7,6 +7,7 @@ import { prodUrl } from "../../config";
 import { React, useEffect, useState } from "react";
 import { Backdrop, Button, CardActions, CircularProgress } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import parse from 'html-react-parser';
 
 const Single1 = () => {
   const navigate = useNavigate();
@@ -30,8 +31,8 @@ const Single1 = () => {
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        setEventList(result);
-        setLoading(false);
+        setEventList(result.reverse());
+        setLoading(false)
       })
       .catch((error) => console.log("error", error));
   }, [url]);
@@ -44,13 +45,13 @@ const Single1 = () => {
       <div className="right">
         <Navbar />
         <div style={{
-            width:"100%",
-            display:"flex",
-            justifyContent:"center",
-            margin:"1px 0"
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          margin: "1px 0"
         }} className="divofevents">
           <Link style={{
-            margin:"1rem auto !important"
+            margin: "1rem auto !important"
           }} className="linkToCreateEvent" to="/clubEvent">
             <Button variant="contained" className="addEventButton">
               <Add />
@@ -71,7 +72,7 @@ const Single1 = () => {
                         <h1 className="itemTitle">{ele.name}</h1>
                         <div className="detailItem">
                           <span className="itemKey">Description:</span>
-                          <span className="itemValue">{ele.desc}</span>
+                          <span className="itemValue" >{parse(ele.desc)}</span>
                         </div>
                         <div className="detailItem">
                           <span className="itemKey">Date:</span>
@@ -117,7 +118,7 @@ const Single1 = () => {
                 zIndex: (theme) => theme.zIndex.drawer + 1,
               }}
               open={loading}
-              // onClick={handleClose}
+            // onClick={handleClose}
             >
               <CircularProgress color="inherit" />
             </Backdrop>

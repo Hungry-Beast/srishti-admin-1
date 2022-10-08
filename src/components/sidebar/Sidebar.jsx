@@ -42,8 +42,11 @@ const Sidebar = () => {
             style={{ textDecoration: "none" }}>
             <p className="title">CLUBS</p>
           </Link>
-          <Link to='/createClub'>
-          <Button variant="content"><Add/>Add Club</Button>
+          <Link to="/createClub">
+            <Button variant="content">
+              <Add />
+              Add Club
+            </Button>
           </Link>
           {clubsList?.map((ele, i) => {
             return (

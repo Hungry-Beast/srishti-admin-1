@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Button,
   Card,
@@ -20,11 +20,17 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Login = () => {
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setisLoading] = useState(false);
   const navigate = useNavigate();
   // const handleClickShowPassword = () => setShowPassword(!showPassword);
   // const handleMouseDownPassword = () => setShowPassword(!showPassword);
+  // let navigate = useNavigate();
+  let admin = useRef("");
+  useEffect(() => {
+    admin.current = JSON.parse(localStorage.getItem("user"));
+    // console.log(JSON.parse(localStorage.getItem("user")), admin.current)
+    if (admin.current?.authToken) navigate("/home");
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -51,8 +57,9 @@ const Login = () => {
         console.log(result);
         if (result.success) {
           localStorage.setItem("user", JSON.stringify(result));
+
           console.log("Hi");
-          navigate("/");
+          navigate("/home");
         } else {
           throw new Error(result.error);
         }
