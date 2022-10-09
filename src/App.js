@@ -21,7 +21,7 @@ import RequireAuth from "./RequireAuth";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
-
+  
   return (
     <div className={darkMode ? "app dark" : "app"}>
       <BrowserRouter>
