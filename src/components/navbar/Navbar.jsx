@@ -14,7 +14,6 @@ import { Button } from "@mui/material";
 
 const Navbar = () => {
   const { dispatch } = useContext(DarkModeContext);
-  console.log(user);
   return (
     <div className="navbar">
       <div className="wrapper">

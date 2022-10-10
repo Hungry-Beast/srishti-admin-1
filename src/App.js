@@ -18,10 +18,11 @@ import { user } from "./localStore";
 import Single1 from "./pages/single/Single1";
 import { useEffect } from "react";
 import RequireAuth from "./RequireAuth";
+import { useRef } from "react";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
-  
+
   return (
     <div className={darkMode ? "app dark" : "app"}>
       <BrowserRouter>
@@ -30,35 +31,43 @@ function App() {
             <Route path="login" element={<Login />} />
           </Route> */}
           <Route path="/login" element={<Login />} />
+          {/* <Route path="/login" element={admin.current ? <Home /> : <Login />} /> */}
           {/* <Route path="/downloadPdf" element={<DownloadPdf />} /> */}
           <Route
             path="/createClub"
             element={
-              <RequireAuth>
-                <CreateClub />
-              </RequireAuth>
+              // <RequireAuth>
+              <CreateClub />
+              // </RequireAuth>
             }
           />
           <Route path="/clubEvent" element={<ClubEvent />} />
+
+          {/* <Route
+            path="/"
+            element={<Navigate to={admin.current ? "/home" : "/login"} />}
+          /> */}
           <Route
             path="/"
-            element={<Navigate to={user ? "/home" : "/login"} />}
+            element={<Home />}
           />
+
+
           <Route
             path="/home"
             element={
-              <RequireAuth>
-                <Home />
-              </RequireAuth>
+              // <RequireAuth>
+              <Home />
+              // </RequireAuth>
             }
           />
           <Route path="/events">
             <Route
               path=":clubId"
               element={
-                <RequireAuth>
-                  <Single1 />
-                </RequireAuth>
+                // <RequireAuth>
+                <Single1 />
+                // </RequireAuth>
               }
             />
           </Route>
@@ -66,9 +75,9 @@ function App() {
             <Route
               path=":eventId"
               element={
-                <RequireAuth>
-                  <List />
-                </RequireAuth>
+                // <RequireAuth>
+                <List />
+                // </RequireAuth>
               }
             />
           </Route>
