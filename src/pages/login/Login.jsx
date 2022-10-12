@@ -50,7 +50,7 @@ const Login = () => {
       redirect: "follow",
     };
 
-    fetch(prodUrl + "/api/auth/login", requestOptions)
+    fetch(prodUrl + "/auth/login", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setisLoading(false);
@@ -65,6 +65,7 @@ const Login = () => {
         }
       })
       .catch((error) => {
+        setisLoading(false);
         Swal.fire(
           "Incorrect Password",
           "Please use correct credential",
