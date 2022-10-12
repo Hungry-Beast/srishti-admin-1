@@ -35,6 +35,8 @@ const Single1 = () => {
         setLoading(false)
       })
       .catch((error) => console.log("error", error));
+
+    fetch(delUrl, requestOptions).then(response = response.json()).then(result => setEventList(result))
   }, [url]);
 
   return (
