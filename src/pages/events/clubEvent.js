@@ -11,6 +11,10 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  Backdrop,
+  CircularProgress,
+  IconButton,
+  Snackbar,
 } from "@mui/material";
 // import dayjs from 'dayjs/locale/*'
 import ReactQuill from "react-quill";
@@ -25,10 +29,12 @@ import { user } from "../../localStore";
 import { clubs } from "../../data";
 import "react-quill/dist/quill.snow.css";
 import "../Quill/TextEditor.css";
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Sidebar from "../../components/sidebar/Sidebar"
-import "./clubevent.css"
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Sidebar from "../../components/sidebar/Sidebar";
+import "./clubevent.css";
 import { useRef } from "react";
+import { Link } from "react-router-dom";
+import { Close } from "@mui/icons-material";
 // const ChooseFile = styled.input`
 // position: absolute;
 // z-index: -1;
@@ -37,12 +43,8 @@ import { useRef } from "react";
 // font-size: 17px;
 // color: black;
 
-
 // `;
-const ChooseFile = styled.input`
-
-
-`;
+const ChooseFile = styled.input``;
 
 // margin: 10px 0;
 // outline:none;
@@ -63,30 +65,48 @@ const ClubSelect = styled(Select)`
   /* margin: 1rem 0; */
 `;
 const Paid = styled(TextField)`
-display: ${props => props.paid ? "block" : "none"};
-padding:5px;
+  display: ${(props) => (props.paid ? "block" : "none")};
+  padding: 5px;
 `;
 const ClubEvent = () => {
   const [userInfo, setuserInfo] = useState({
-    desc: ''
-  })
+    desc: "",
+  });
   const ondescription = (value) => {
     setuserInfo({
       ...userInfo,
-      desc: value
+      desc: value,
     });
-  }
+  };
 
   // Handling DatePicker
   const [date, setDate] = useState(null);
   const [time, setTime] = useState(null);
   const [club, setClub] = useState([]);
   const [checked, setChecked] = useState(true);
-  const [paid, setPaid] = useState(false)
-  const [price, setPrice] = useState('')
-  const [event, setEvent] = useState('Open for all')
+  const [paid, setPaid] = useState(false);
+  const [price, setPrice] = useState("");
+  const [event, setEvent] = useState("Open for all");
+  const [loading, setLoading] = useState(false);
 
   const [clubData, setClubData] = useState([]);
+  const [userCurrent, setUser] = useState();
+  const [openBd, setOpenBd] = useState(false);
+  const handleOpen = () => {
+    setOpenBd(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenBd(false);
+  };
+
+  useEffect(() => {
+    setUser(user);
+  }, []);
 
   const getClub = () => {
     fetch(prodUrl + "/clubs")
@@ -110,11 +130,12 @@ const ClubEvent = () => {
   const handleChange = (event) => {
     setChecked(event.target.checked);
   };
-  const pd = useRef()
-  const open = useRef()
+  const pd = useRef();
+  const open = useRef();
   // Handle Form Submit
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + user.authToken);
     var selectedDate = date.$D + "/" + (date.$M + 1) + "/" + date.$y;
@@ -142,9 +163,9 @@ const ClubEvent = () => {
 
     formdata.append("venue", e.target.venue.value);
     if (paid) {
-      formdata.append('isPaid', paid)
-      formdata.append("price", price)
-    };
+      formdata.append("isPaid", paid);
+      formdata.append("price", price);
+    }
     formdata.append("isOpen", checked);
 
     var requestOptions = {
@@ -156,19 +177,23 @@ const ClubEvent = () => {
 
     fetch(prodUrl + "/events", requestOptions)
       .then((response) => response.json())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error));
+      .then((result) => {
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+      });
 
-    if (!checked) open.current.click()
-    if (paid) pd.current.click()
+    if (!checked) open.current.click();
+    if (paid) pd.current.click();
 
     setDate(null);
-    setuserInfo('');
+    setuserInfo("");
     setTime(null);
     setClub([]);
-    setPrice('')
-    setChecked(true)
-    setPaid(false)
+    setPrice("");
+    setChecked(true);
+    setPaid(false);
     e.target.reset();
 
     // e.target.paid.checked = false
@@ -178,25 +203,53 @@ const ClubEvent = () => {
   };
   // console.log(club);
   const handlePaidChange = (e) => {
-    paid ? setPaid(false) : setPaid(true)
-  }
+    paid ? setPaid(false) : setPaid(true);
+  };
   // console.log(paid)
   const handlePriceChange = (e) => {
-    setPrice(e.target.value)
-  }
-
+    setPrice(e.target.value);
+  };
+  const action = (
+    <React.Fragment>
+      <Link to="/home">
+        <Button color="primary" size="small" onClick={handleClose}>
+          Goto to Home
+        </Button>
+      </Link>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <Close fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
   return (
     <div>
       <Typography
         gutterBottom
         variant="h3"
         align="center"
-        sx={{ fontFamily: "Roboto", margin: '2rem 0' }}
+        sx={{ fontFamily: "Roboto", margin: "2rem 0" }}
       >
         Club Events
       </Typography>
-
-      <Card sx={{ maxWidth: "80vw", margin: "0 auto", padding: "0px 5px", border: '1px solid #673ab7;' }}>
+      <Backdrop
+        sx={{ color: "#7451f8", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Card
+        sx={{
+          maxWidth: "80vw",
+          margin: "0 auto",
+          padding: "0px 5px",
+          border: "1px solid #673ab7;",
+        }}
+      >
         <CardContent>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={1}></Grid>
@@ -208,7 +261,7 @@ const ClubEvent = () => {
                 placeholder="Enter Name"
                 variant="outlined"
                 fullWidth
-              // required
+                // required
               />
             </Grid>
 
@@ -232,7 +285,9 @@ const ClubEvent = () => {
                 >
                   {clubData.length !== 0 &&
                     clubData.map((club, i) => (
-                      <MenuItem value={club.value} key={i}>{club.label}</MenuItem>
+                      <MenuItem value={club.value} key={i}>
+                        {club.label}
+                      </MenuItem>
                     ))}
                 </ClubSelect>
               </FormControl>
@@ -243,7 +298,6 @@ const ClubEvent = () => {
                 <DatePicker
                   label="Pick Date"
                   placeholder="MM/DD/YYYY"
-
                   value={date}
                   onChange={(newValue) => {
                     // console.log(newValue.D)
@@ -265,7 +319,6 @@ const ClubEvent = () => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <TimePicker
                   label="Pick Time"
-
                   placeholder="Pick time of event"
                   value={time}
                   onChange={(newValue) => {
@@ -284,31 +337,37 @@ const ClubEvent = () => {
                 placeholder="Enter the venue"
                 variant="outlined"
                 fullWidth
-              // required
+                // required
               />
             </Grid>
 
-            <Grid item xs={12} sx={{ margin: "10px auto" }} >
-              <label className="font-weight-bold"> Description <span className="required"> * </span> </label>
-              <EditorToolbar toolbarId={'t1'} />
+            <Grid item xs={12} sx={{ margin: "10px auto" }}>
+              <label className="font-weight-bold">
+                {" "}
+                Description <span className="required"> * </span>{" "}
+              </label>
+              <EditorToolbar toolbarId={"t1"} />
               <ReactQuill
                 theme="snow"
                 value={userInfo.desc}
                 onChange={ondescription}
                 placeholder={"Write something awesome..."}
-                modules={modules('t1')}
+                modules={modules("t1")}
                 formats={formats}
               />
             </Grid>
 
             <Grid item xs={12}>
-              <div style={{ position: 'relative' }}>
-                <label className="custom-file-upload" style={{
-                  display: 'block',
-                  margin: "0.5rem 0"
-                }}>
+              <div style={{ position: "relative" }}>
+                <label
+                  className="custom-file-upload"
+                  style={{
+                    display: "block",
+                    margin: "0.5rem 0",
+                  }}
+                >
                   {/* <input type="file" /> */}
-                  <span className='text'>Upload Pic</span>
+                  <span className="text">Upload Pic</span>
                 </label>
                 <ChooseFile name="pic" type="file" accept="image/*" />
               </div>
@@ -316,43 +375,60 @@ const ClubEvent = () => {
 
             <Grid item xs={12} sx={{ margin: "10px auto" }}>
               <FormControlLabel
-                control={<Switch
-                  ref={open}
-                  name='open'
-                  defaultChecked
-                  value={checked}
-                  onChange={handleChange}
-                  inputProps={{ "aria-label": "controlled" }}
-                />} label={checked ? "Open for all" : 'Only for Neristians'} />
-
+                control={
+                  <Switch
+                    ref={open}
+                    name="open"
+                    defaultChecked
+                    value={checked}
+                    onChange={handleChange}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                }
+                label={checked ? "Open for all" : "Only for Neristians"}
+              />
             </Grid>
             <Grid item xs={12} sx={{ margin: "10px auto" }}>
               <FormControlLabel
-                control={<Switch
-                  name='paid'
-                  value={paid}
-                  onChange={handlePaidChange}
-                  inputProps={{ "aria-label": "controlled" }}
-                />} label={paid ? "Event is paid" : 'Event is NOT Paid'} ref={pd} />
-
+                control={
+                  <Switch
+                    name="paid"
+                    value={paid}
+                    onChange={handlePaidChange}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                }
+                label={paid ? "Event is paid" : "Event is NOT Paid"}
+                ref={pd}
+              />
             </Grid>
-            <Grid item xs={12} sx={{
-              margin: "10px auto", minHeight: '4.2rem'
-            }}>
-              < Paid type='number' paid={paid} name="price"
+            <Grid
+              item
+              xs={12}
+              sx={{
+                margin: "10px auto",
+                minHeight: "4.2rem",
+              }}
+            >
+              <Paid
+                type="number"
+                paid={paid}
+                name="price"
                 label="Price"
                 value={price}
                 placeholder="Enter Price"
                 variant="outlined"
                 onChange={handlePriceChange}
-                fullWidth onWheel={(e) => e.target.blur()} />
-
+                fullWidth
+                onWheel={(e) => e.target.blur()}
+              />
             </Grid>
             <Grid item xs={12} sx={{ margin: "10px auto" }}>
-              <Button sx={{
-                color: '#fff',
-                backgroundColor: '#673ab7'
-              }}
+              <Button
+                sx={{
+                  color: "#fff",
+                  backgroundColor: "#673ab7",
+                }}
                 type="submit"
                 variant="contained"
                 color="primary"
@@ -360,11 +436,18 @@ const ClubEvent = () => {
               >
                 Submit
               </Button>
+              <Snackbar
+                open={openBd}
+                autoHideDuration={6000}
+                onClose={handleClose}
+                message="Event Created"
+                action={action}
+              />
             </Grid>
           </form>
         </CardContent>
       </Card>
-    </div >
+    </div>
   );
 };
 

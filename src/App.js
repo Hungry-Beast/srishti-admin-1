@@ -23,9 +23,6 @@ import { useRef } from "react";
 function App() {
   const { darkMode } = useContext(DarkModeContext);
 
-
-
-
   return (
     <div className={darkMode ? "app dark" : "app"}>
       <BrowserRouter>

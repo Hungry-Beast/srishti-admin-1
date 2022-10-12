@@ -1,8 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { Paper, TextField, Button } from "@mui/material";
+import {
+  Paper,
+  TextField,
+  Button,
+  Backdrop,
+  CircularProgress,
+  Snackbar,
+  IconButton,
+} from "@mui/material";
+import { Close } from "@mui/icons-material";
 import { user } from "../../localStore";
 import { prodUrl } from "../../config";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const ClubForm = styled.form`
   display: flex;
@@ -46,10 +57,48 @@ const ClubButton = styled(Button)`
 `;
 
 const CreateClub = () => {
+  const [loading, setLoading] = useState(false);
+  const [userCurrent, setUser] = useState();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    setUser(user);
+  }, []);
+
+  const action = (
+    <React.Fragment>
+      <Link to="/home">
+        <Button color="primary" size="small" onClick={handleClose}>
+          Goto to Home
+        </Button>
+      </Link>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <Close fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
     var myHeaders = new Headers();
-    myHeaders.append("Authorization", "Bearer " + user.authToken);
+    myHeaders.append("Authorization", "Bearer " + userCurrent.authToken);
     // myHeaders.append("Content-Type", "application/json");
     console.log(e.target.poster.files);
     const formdata = new FormData();
@@ -66,12 +115,24 @@ const CreateClub = () => {
 
     fetch(prodUrl + "/clubs", requestOptions)
       .then((response) => response.text())
-      .then((result) => console.log(result))
-      .catch((error) => console.log("error", error));
+      .then((result) => {
+        setLoading(false);
+        handleOpen();
+      })
+      .catch((error) => {
+        setLoading(false);
+        // handleOpen();
+      });
   };
   return (
     <ClubForm onSubmit={handleSubmit}>
       <ClubPaper>
+        <Backdrop
+          sx={{ color: "#7451f8", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <Heading>Club Registration</Heading>
         <ClubInput
           name="clubname"
@@ -84,6 +145,13 @@ const CreateClub = () => {
         <ClubButton type="submit" variant="contained">
           Submit
         </ClubButton>
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message="Club Created"
+          action={action}
+        />
       </ClubPaper>
     </ClubForm>
   );

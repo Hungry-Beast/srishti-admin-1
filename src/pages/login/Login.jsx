@@ -65,6 +65,7 @@ const Login = () => {
         }
       })
       .catch((error) => {
+        setisLoading(false);
         Swal.fire(
           "Incorrect Password",
           "Please use correct credential",
