@@ -27,7 +27,7 @@ const Datatable = () => {
 
     doc.setFontSize(15);
 
-    const title = `Event Name::${newData[0].eventName}`;
+    const title = `Event Name::${event.name}`;
     const headers = [["NAME", "RegNo", "Phone No"]];
 
     const data = newData.map((elt) => [elt.name, elt.regNo, elt.phoneNo]);
@@ -40,7 +40,7 @@ const Datatable = () => {
 
     doc.text(title, marginLeft, 40);
     doc.autoTable(content);
-    doc.save(`${newData[0].eventName}.pdf`);
+    doc.save(`${event.name}.pdf`);
   };
 
   var myHeaders = new Headers();

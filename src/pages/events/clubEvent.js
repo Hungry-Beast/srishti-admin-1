@@ -85,6 +85,9 @@ const ClubEvent = () => {
   const [club, setClub] = useState([]);
   const [checked, setChecked] = useState(true);
   const [paid, setPaid] = useState(false);
+  const [isMainEvent, setIsMainEvent] = useState(false);
+  const [differentPrice, setDifferentPrice] = useState(false);
+  const [otherPrice, setOtherPrice] = useState("");
   const [price, setPrice] = useState("");
   const [event, setEvent] = useState("Open for all");
   const [loading, setLoading] = useState(false);
@@ -167,6 +170,9 @@ const ClubEvent = () => {
       formdata.append("price", price);
     }
     formdata.append("isOpen", checked);
+    formdata.append("isMainEvent", isMainEvent);
+    formdata.append("differentPrice", differentPrice);
+    formdata.append("otherPrice", otherPrice);
 
     var requestOptions = {
       method: "POST",
@@ -205,9 +211,21 @@ const ClubEvent = () => {
   const handlePaidChange = (e) => {
     paid ? setPaid(false) : setPaid(true);
   };
+  const handleisMainEvent = (e) => {
+    // console.log(e)
+    setIsMainEvent(e.target.checked);
+  };
   // console.log(paid)
   const handlePriceChange = (e) => {
     setPrice(e.target.value);
+  };
+  const handleDifferentPrice = (e) => {
+    // console.log(e)
+    setDifferentPrice(e.target.checked);
+  };
+  // console.log(paid)
+  const handleOtherPriceChange = (e) => {
+    setOtherPrice(e.target.value);
   };
   const action = (
     <React.Fragment>
@@ -392,6 +410,20 @@ const ClubEvent = () => {
               <FormControlLabel
                 control={
                   <Switch
+                    name="isMainEvent"
+                    value={isMainEvent}
+                    onChange={handleisMainEvent}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                }
+                label={isMainEvent ? "Main Event" : "Pre Event"}
+                ref={pd}
+              />
+            </Grid>
+            <Grid item xs={12} sx={{ margin: "10px auto" }}>
+              <FormControlLabel
+                control={
+                  <Switch
                     name="paid"
                     value={paid}
                     onChange={handlePaidChange}
@@ -402,6 +434,7 @@ const ClubEvent = () => {
                 ref={pd}
               />
             </Grid>
+
             <Grid
               item
               xs={12}
@@ -421,6 +454,51 @@ const ClubEvent = () => {
                 onChange={handlePriceChange}
                 fullWidth
                 onWheel={(e) => e.target.blur()}
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              sx={{ margin: "10px auto", display: paid ? "block" : "none" }}
+            >
+              <FormControlLabel
+                control={
+                  <Switch
+                    name="differentPrice"
+                    value={differentPrice}
+                    onChange={handleDifferentPrice}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                }
+                label={
+                  differentPrice
+                    ? "Price is different for other"
+                    : "Price is same for other"
+                }
+                ref={pd}
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                margin: "10px auto",
+                minHeight: "4.2rem",
+              }}
+            >
+              <Paid
+                type="number"
+                paid={differentPrice}
+                name="otherPrice"
+                label="otherPrice"
+                value={otherPrice}
+                required
+                placeholder="Enter Price for Others"
+                variant="outlined"
+                onChange={handleOtherPriceChange}
+                fullWidth
+                onWheel={(e) => e.target.blur()}
+              
               />
             </Grid>
             <Grid item xs={12} sx={{ margin: "10px auto" }}>
