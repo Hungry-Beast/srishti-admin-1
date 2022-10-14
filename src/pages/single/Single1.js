@@ -9,6 +9,8 @@ import { Backdrop, Button, CardActions, CircularProgress } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import parse from 'html-react-parser';
 
+
+
 const Single1 = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -36,8 +38,29 @@ const Single1 = () => {
       })
       .catch((error) => console.log("error", error));
 
-    fetch(delUrl, requestOptions).then(response = response.json()).then(result => setEventList(result))
   }, [url]);
+
+  // const editEvent = () => {
+  //   fetch(prodUrl / 'edit', requestOptions).then(response => response.json()).then(result => setEventList(result))
+
+  // }
+  const deleteEvent = (id) => {
+
+    var myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${authToken}`);
+
+    var requestOptions = {
+      method: 'PUT',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+
+    fetch(`${prodUrl}/clubs/delete/${id}`, requestOptions)
+      .then(response => response.json())
+      .then(result => console.log(result))
+      .catch(error => console.log('error', error));
+  }
+
 
   return (
     <div className="single">
