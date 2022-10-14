@@ -1,6 +1,7 @@
 {
   "name": "sonabyssadmin",
   "homepage": "http://www.adminpanel.sonabyss2k22.com",
+  "proxy":"http://179.61.188.237",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -95,10 +95,10 @@ const Single1 = () => {
                       <img src={ele.image} alt="" className="itemImg" />
                       <div className="details">
                         <h1 className="itemTitle">{ele.name}</h1>
-                        <div className="detailItem">
+                        {/* <div className="detailItem">
                           <span className="itemKey">Description:</span>
                           <span className="itemValue" >{parse(ele.desc)}</span>
-                        </div>
+                        </div> */}
                         <div className="detailItem">
                           <span className="itemKey">Date:</span>
                           <span className="itemValue">{ele.date}</span>
