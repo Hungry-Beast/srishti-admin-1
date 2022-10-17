@@ -185,7 +185,7 @@ const Single1 = () => {
                     <div className="head" style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <CardActions>
                         <Button
-                          onClick={() => deleteEvent(ele.id)}
+                          onClick={() => deleteEvent(ele["_id"])}
                           sx={{ color: "#6439ff", borderColor: "#6439ff" }}
                           variant="outlined"
                         >
@@ -195,7 +195,7 @@ const Single1 = () => {
                       <CardActions>
                         <Button
                           onClick={() =>
-                            navigate(`/registration/${ele.id}`, {
+                            navigate(`/registration/${ele["_id"]}`, {
                               state: ele,
                             })
                           }

@@ -32,7 +32,7 @@ function App() {
             <Route path="login" element={<Login />} />
           </Route> */}
           <Route path="/login" element={<Login />} />
-          <Route exact path='/edit' element={<EditEvent />} />
+          {/* <Route exact path='/edit' element={<EditEvent />} /> */}
           {/* <Route path="/login" element={admin.current ? <Home /> : <Login />} /> */}
           {/* <Route path="/downloadPdf" element={<DownloadPdf />} /> */}
           <Route
@@ -43,7 +43,7 @@ function App() {
               // </RequireAuth>
             }
           />
-          <Route path="/clubEvent" element={<ClubEvent />} />
+          {/* <Route path="/clubEvent" element={<ClubEvent />} /> */}
 
           {/* <Route
             path="/"
