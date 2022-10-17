@@ -6,7 +6,7 @@ import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { prodUrl } from "../../config";
 import { React, useEffect, useState } from "react";
 import { Backdrop, Button, CardActions, CircularProgress } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { Add, EditOutlined } from "@mui/icons-material";
 import parse from 'html-react-parser';
 
 
@@ -23,12 +23,12 @@ const Single1 = () => {
   myHeaders.append("Authorization", `Bearer ${authToken}`);
 
   // var formdata = new FormData();
+  var requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
   useEffect(() => {
-    var requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      redirect: "follow",
-    };
 
     fetch(url, requestOptions)
       .then((response) => response.json())
@@ -37,27 +37,92 @@ const Single1 = () => {
         setLoading(false)
       })
       .catch((error) => console.log("error", error));
+    console.log(eventList)
 
   }, [url]);
 
-  // const editEvent = () => {
-  //   fetch(prodUrl / 'edit', requestOptions).then(response => response.json()).then(result => setEventList(result))
+  // const editRequest = (id, formdata) => {
+
+  //   const requestOptions = {
+  //     method: 'PUT',
+  //     headers: myHeaders,
+  //     body: formdata,
+  //     redirect: 'follow'
+  //   }
+  //   fetch(`${prodUrl}/events/edit/${id}`, requestOptions)
+  //     .then(response => response.json())
+  //     .then(result => {
+  //       console.log(result)
+  //       const newEvent = eventList.forEach(event => {
+  //         if (event._id === id) {
+  //           event.name = result.name;
+  //           event.date = result.date;
+  //           event.time = result.time;
+  //           event.club = result.clubId;
+  //           event.clubName = result.clubName;
+  //           event.desc = result.desc;
+  //           event.date = result.date;
+  //           event.time = result.time;
+  //           event.duration = result.duration;
+  //           event.venue = result.venue;
+  //           event.isOpen = result.isOpen;
+  //           event.isPaid = result.isPaid;
+  //           event.priceO = result.priceO ? result.priceO : "";
+  //           event.priceN = result.priceN ? result.priceN : "";
+  //           event.isMainEvent = result.isMainEvent
+  //           event.image = result.image
+  //         }
+  //         console.log(newEvent)
+  //         // setEventList(newEvent)
+  //       })
+  //     })
+  //     .catch(error => console.log('error', error));
 
   // }
+  const [element, setElement] = useState([])
+  let formdata = ''
+  const editEvent = (ele) => {
+    let newEle = []
+    var requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+    };
+
+    fetch(`${prodUrl}/events/noAuth/${ele.club}`, requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        newEle = result.filter(e => ele.id === e._id)
+        newEle = newEle[0];
+        navigate('/edit', {
+          state: [newEle, eventList]
+          // formdata: JSON.stringify({ name, date, time, clubName, desc, })
+        })
+
+      })
+      .catch(error => console.log('error', error));
+
+    // editRequest(id, formdata)
+
+  }
   const deleteEvent = (id) => {
 
     var myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${authToken}`);
 
     var requestOptions = {
-      method: 'PUT',
+      method: 'DELETE',
       headers: myHeaders,
       redirect: 'follow'
     };
-
-    fetch(`${prodUrl}/clubs/delete/${id}`, requestOptions)
+    fetch(`${prodUrl}/events/delete/${id}`, requestOptions)
       .then(response => response.json())
-      .then(result => console.log(result))
+      .then(result => {
+
+        const a = eventList.filter(e => e.id !== result.event._id)
+        console.log(eventList.filter(e => e.id !== result.event._id), a);
+        setEventList(a)
+      })
       .catch(error => console.log('error', error));
   }
 
@@ -89,45 +154,81 @@ const Single1 = () => {
             eventList.length ? (
               eventList.map((ele, i) => {
                 return (
-                  <div className="card" key={i}>
-                    <h1 className="title">Information</h1>
-                    <div className="item">
-                      <img src={ele.image} alt="" className="itemImg" />
-                      <div className="details">
-                        <h1 className="itemTitle">{ele.name}</h1>
-                        {/* <div className="detailItem">
+
+                  <div className="card" key={i} >
+                    <div style={{ display: 'flex', flexDirection: 'column', margin: '2em 3em' }}>
+                      <h1 className="title">Information</h1>
+
+                      <div className="item">
+                        <img src={ele.image} alt="" className="itemImg" />
+                        <div className="details">
+                          <h1 className="itemTitle">{ele.name}</h1>
+                          {/* <div className="detailItem">
                           <span className="itemKey">Description:</span>
                           <span className="itemValue" >{parse(ele.desc)}</span>
                         </div> */}
-                        <div className="detailItem">
-                          <span className="itemKey">Date:</span>
-                          <span className="itemValue">{ele.date}</span>
+                          <div className="detailItem">
+                            <span className="itemKey">Event Date:</span>
+                            <span className="itemValue">{ele.date}</span>
+                          </div>
+                          <div className="detailItem">
+                            <span className="itemKey">Event Time:</span>
+                            <span className="itemValue">{ele.time}</span>
+                          </div>
+                          <div className="detailItem">
+                            <span className="itemKey">Club Name:</span>
+                            <span className="itemValue">{ele.clubName}</span>
+                          </div>
                         </div>
-                        <div className="detailItem">
-                          <span className="itemKey">Time:</span>
-                          <span className="itemValue">{ele.time}</span>
-                        </div>
-                        <div className="detailItem">
-                          <span className="itemKey">Club Name:</span>
-                          <span className="itemValue">{ele.clubName}</span>
-                        </div>
-                        <CardActions>
-                          <Button
-                            onClick={() =>
-                              navigate(`/registration/${ele.id}`, {
-                                state: ele,
-                              })
-                            }
-                            sx={{ color: "#6439ff", borderColor: "#6439ff" }}
-                            variant="outlined"
-                          >
-                            Participants
-                          </Button>
-                        </CardActions>
                       </div>
                     </div>
+                    <div className="head" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <CardActions>
+                        <Button
+                          onClick={() => deleteEvent(ele.id)}
+                          sx={{ color: "#6439ff", borderColor: "#6439ff" }}
+                          variant="outlined"
+                        >
+                          Delete
+                        </Button>
+                      </CardActions>
+                      <CardActions>
+                        <Button
+                          onClick={() =>
+                            navigate(`/registration/${ele.id}`, {
+                              state: ele,
+                            })
+                          }
+                          sx={{ color: "#6439ff", borderColor: "#6439ff" }}
+                          variant="outlined"
+                        >
+                          Participants
+                        </Button>
+                      </CardActions>
+                      <CardActions>
+                        <Button
+                          onClick={() =>
+                            navigate(`/`)
+                          }
+                          sx={{ color: "#6439ff", borderColor: "#6439ff" }}
+                          variant="outlined"
+                        >
+                          Description
+                        </Button>
+                      </CardActions>
+                      <CardActions>
+                        <Button
+                          onClick={() => editEvent(ele)}
+                          sx={{ color: "#6439ff", borderColor: "#6439ff" }}
+                          variant="outlined"
+                        >
+                          Edit
+                        </Button>
+                      </CardActions>
+                    </div>
                   </div>
-                );
+
+                )
               })
             ) : (
               <h1
@@ -150,7 +251,7 @@ const Single1 = () => {
           )}
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

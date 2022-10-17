@@ -279,7 +279,7 @@ const ClubEvent = () => {
                 placeholder="Enter Name"
                 variant="outlined"
                 fullWidth
-                // required
+              // required
               />
             </Grid>
 
@@ -355,7 +355,7 @@ const ClubEvent = () => {
                 placeholder="Enter the venue"
                 variant="outlined"
                 fullWidth
-                // required
+              // required
               />
             </Grid>
 
@@ -488,17 +488,17 @@ const ClubEvent = () => {
             >
               <Paid
                 type="number"
-                paid={differentPrice}
+                paid={paid && differentPrice}
                 name="otherPrice"
                 label="otherPrice"
                 value={otherPrice}
-                required
+                required={(paid && differentPrice) ? true : false}
                 placeholder="Enter Price for Others"
                 variant="outlined"
                 onChange={handleOtherPriceChange}
                 fullWidth
                 onWheel={(e) => e.target.blur()}
-              
+
               />
             </Grid>
             <Grid item xs={12} sx={{ margin: "10px auto" }}>

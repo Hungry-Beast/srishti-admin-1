@@ -3,6 +3,7 @@ import Login from "./pages/login/Login";
 import List from "./pages/list/List";
 import CreateClub from "./pages/club/clubRegister";
 import ClubEvent from "./pages/events/clubEvent";
+import EditEvent from "./pages/events/EditEvent";
 import "./style/dark.scss";
 import { useContext } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
@@ -31,6 +32,7 @@ function App() {
             <Route path="login" element={<Login />} />
           </Route> */}
           <Route path="/login" element={<Login />} />
+          <Route exact path='/edit' element={<EditEvent />} />
           {/* <Route path="/login" element={admin.current ? <Home /> : <Login />} /> */}
           {/* <Route path="/downloadPdf" element={<DownloadPdf />} /> */}
           <Route
