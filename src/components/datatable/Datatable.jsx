@@ -54,13 +54,22 @@ const Datatable = () => {
   var myHeaders = new Headers();
   const { authToken } = JSON.parse(localStorage.getItem("user"));
   myHeaders.append("Authorization", `Bearer ${authToken}`);
-
+  const update = () => {
+    fetch(url, requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setNewData(data.map((e, i) => ({ ...e, id: e["_id"] })));
+        setLoading(false);
+      })
+      .catch((error) => console.log("error", error));
+  };
   const submitTransaction = async (
     isVerified,
     registrationId,
     transactionId
   ) => {
-    console.log(isVerified, registrationId, transactionId);
+    console.log(isVerified, registrationId);
     setModal(false);
     var myHeaders = new Headers();
     myHeaders.append("Authorization", "Bearer " + authToken);
@@ -98,11 +107,12 @@ const Datatable = () => {
       const status = res.status;
       const result = await res.json();
       console.log(status, result);
+      update();
       setPaymentLoading(false);
       if (status === 202) {
         Swal.fire(
-          `${isVerified ? "Verified" : "Rejected"}`,
-          `Transaction is ${isVerified ? "Verified" : "Rejected"}`,
+          `${isVerified===1 ? "Verified" : "Rejected"}`,
+          `Transaction is ${isVerified===1 ? "Verified" : "Rejected"}`,
           "success"
         );
       } else if (status === 226) {
@@ -183,12 +193,12 @@ const Datatable = () => {
       renderCell: (params) => {
         return (
           <>
-            {params.row.isVerified === null ? (
+            {params.row.isVerified === 0 ? (
               <VerifyDiv>
                 <Tooltip title="Reject">
                   <Button
                     variant="outlined"
-                    onClick={() => submitTransaction(false, params.row.id)}
+                    onClick={() => submitTransaction(2, params.row.id)}
                     color="error"
                   >
                     <Cancel />
@@ -226,7 +236,7 @@ const Datatable = () => {
                       variant="contained"
                       color="success"
                       onClick={() =>
-                        submitTransaction(false, params.row.id, transactionId)
+                        submitTransaction(1, params.row.id, transactionId)
                       }
                     >
                       Submit
@@ -237,9 +247,9 @@ const Datatable = () => {
             ) : (
               <Button
                 variant="contained"
-                color={params.row.isVerified ? "success" : "error"}
+                color={params.row.isVerified === 1 ? "success" : "error"}
               >
-                {params.row.isVerified ? "Accepted" : "Rejected"}
+                {params.row.isVerified === 1 ? "Accepted" : "Rejected"}
               </Button>
             )}
           </>
@@ -284,16 +294,6 @@ const Datatable = () => {
   let url = prodUrl + location.pathname;
   let event = location.state;
   useEffect(() => {
-    const update = () => {
-      fetch(url, requestOptions)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          setNewData(data.map((e, i) => ({ ...e, id: e["_id"] })));
-          setLoading(false);
-        })
-        .catch((error) => console.log("error", error));
-    };
     update();
   }, [url]);
 

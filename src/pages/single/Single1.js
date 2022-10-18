@@ -156,7 +156,7 @@ const Single1 = () => {
                 return (
 
                   <div className="card" key={i} >
-                    <div style={{ display: 'flex', flexDirection: 'column', margin: '2em 3em' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', margin: '1rem 2rem' }}>
                       <h1 className="title">Information</h1>
 
                       <div className="item">
