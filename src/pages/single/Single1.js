@@ -79,7 +79,6 @@ const Single1 = () => {
   //     .catch(error => console.log('error', error));
 
   // }
-  const [element, setElement] = useState([])
   let formdata = ''
   const editEvent = (ele) => {
     let newEle = []
@@ -89,14 +88,22 @@ const Single1 = () => {
       redirect: 'follow'
     };
 
+
+    // const newEvent = eventList.filter(e => e._id === ele._id)
+    // console.log(newEvent)
+    // navigate('/edit', {
+    //   state: [newEvent, setEventList, eventList]
+    //   // formdata: JSON.stringify({ name, date, time, clubName, desc, })
+    // })
+
     fetch(`${prodUrl}/events/noAuth/${ele.club}`, requestOptions)
       .then(response => response.json())
       .then(result => {
-        newEle = result.filter(e => ele.id === e._id)
+        console.log(result)
+        newEle = result.filter(e => ele._id === e._id)
         newEle = newEle[0];
         navigate('/edit', {
           state: [newEle, eventList]
-          // formdata: JSON.stringify({ name, date, time, clubName, desc, })
         })
 
       })
@@ -119,8 +126,8 @@ const Single1 = () => {
       .then(response => response.json())
       .then(result => {
 
-        const a = eventList.filter(e => e.id !== result.event._id)
-        console.log(eventList.filter(e => e.id !== result.event._id), a);
+        const a = eventList.filter(e => e._id !== result.event._id)
+        console.log(eventList.filter(e => e._id !== result.event._id), a);
         setEventList(a)
       })
       .catch(error => console.log('error', error));
@@ -185,7 +192,7 @@ const Single1 = () => {
                     <div className="head" style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <CardActions>
                         <Button
-                          onClick={() => deleteEvent(ele.id)}
+                          onClick={() => deleteEvent(ele._id)}
                           sx={{ color: "#6439ff", borderColor: "#6439ff" }}
                           variant="outlined"
                         >
@@ -195,7 +202,7 @@ const Single1 = () => {
                       <CardActions>
                         <Button
                           onClick={() =>
-                            navigate(`/registration/${ele.id}`, {
+                            navigate(`/registration/${ele._id}`, {
                               state: ele,
                             })
                           }

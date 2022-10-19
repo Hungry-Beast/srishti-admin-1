@@ -4,8 +4,6 @@ import { userColumns } from "../../datatablesource";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { prodUrl } from "../../config";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
 import { Backdrop, Button, CircularProgress } from "@mui/material";
 
 const Datatable = () => {
@@ -58,7 +56,7 @@ const Datatable = () => {
       fetch(url, requestOptions)
         .then((response) => response.json())
         .then((data) => {
-          console.log(data)
+          console.log(data);
           setNewData(data.map((e, i) => ({ ...e, id: i + 1 })));
           setLoading(false);
         })
