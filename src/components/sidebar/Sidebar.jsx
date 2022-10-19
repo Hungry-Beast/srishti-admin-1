@@ -33,10 +33,12 @@ const Sidebar = () => {
       <div className="center">
         <ul>
           <p className="title">MAIN</p>
-          <li>
-            <DashboardIcon className="icon" />
-            <span>Dashboard</span>
-          </li>
+          <Link to="/home">
+            <li>
+              <DashboardIcon className="icon" />
+              <span>Dashboard</span>
+            </li>
+          </Link>
           <Link
             to={`/events/${clubsList[0]?._id}`}
             style={{ textDecoration: "none" }}>
@@ -63,10 +65,7 @@ const Sidebar = () => {
           })}
 
           <p className="title">USER</p>
-          <li>
-            <AccountCircleOutlinedIcon className="icon" />
-            <span>Profile</span>
-          </li>
+
           <li
             onClick={() => {
               localStorage.clear();

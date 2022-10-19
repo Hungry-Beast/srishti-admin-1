@@ -33,7 +33,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Sidebar from "../../components/sidebar/Sidebar";
 import "./clubevent.css";
 import { useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Close, MicExternalOffRounded } from "@mui/icons-material";
 import moment from "moment";
 
@@ -49,11 +49,14 @@ const ChooseFile = styled.input``;
 
 const EditElub = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     let stateEvent
-    let eventList
+    let setEventList
+    // let eventList;
+    console.log(location.state)
     stateEvent = location.state[0];
-    eventList = location?.state[1]
-    console.log(stateEvent)
+    setEventList = location?.state[1]
+    let eventList = location?.state[2]
     useEffect(() => {
         getClub();
         // if (stateEvent.isPaid) {
@@ -147,30 +150,19 @@ const EditElub = () => {
                 //         event.isMainEvent = result.isMainEvent
                 //         event.image = result.image
                 //     }
-                //     // console.log(newEvent)
-                //     // setEventList(newEvent)
+                //     console.log(newEvent)
+                //     setEventList(newEvent)
                 // })
             })
             .catch(error => console.log('error', error));
+        // setEventList()
 
     }
 
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // const formdata = location.formdata
-        // console.log(date.date(), date.month(), date.year())
-
-        // let selectedDate = String(date?.$D).padStart(2, 0) + "/" + String(date?.$M + 1).padStart(2, 0) + "/" + date?.$y;;
-
         let selectedDate = stateEvent.date
-        console.log(stateEvent, stateEvent.date, '------------------', touched)
-
-        // if (!((typeof (date) === 'object') && (typeof newDate === 'object'))) {
-        //     console.log('date changed')
-        //     // selectedDate = String(date?.$D).padStart(2, 0) + "/" + String(date?.$M + 1).padStart(2, 0) + "/" + date?.$y;
-        //     selectedDate = String(date?.$D).padStart(2, 0) + "/" + String(date?.$M + 1).padStart(2, 0) + "/" + date?.$y;;
-        // }
 
         if (touched) {
             selectedDate = String(date?.$D).padStart(2, 0) + "/" + String(date?.$M + 1).padStart(2, 0) + "/" + date?.$y;;
@@ -192,7 +184,7 @@ const EditElub = () => {
                     ? "0" + tempdate.getMinutes()
                     : tempdate.getMinutes();
             newSelectedTime = hrs + ":" + mins;
-            console.log(newSelectedTime)
+            // console.log(newSelectedTime)
         }
 
         var formdata = new FormData();
@@ -239,6 +231,7 @@ const EditElub = () => {
         e.target.reset();
         e.target.venue.value = ''
         e.target.name.value = ''
+        navigate(-1)
 
 
     }
@@ -327,7 +320,7 @@ const EditElub = () => {
                 align="center"
                 sx={{ fontFamily: "Roboto", margin: "2rem 0" }}
             >
-                Club Events
+                Edit Event
             </Typography>
             <Backdrop
                 sx={{ color: "#7451f8", zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -597,7 +590,7 @@ const EditElub = () => {
                                 color="primary"
                                 fullWidth
                             >
-                                Submit
+                                Commit Changes
                             </Button>
                             <Snackbar
                                 open={openBd}

@@ -111,8 +111,8 @@ const Datatable = () => {
       setPaymentLoading(false);
       if (status === 202) {
         Swal.fire(
-          `${isVerified===1 ? "Verified" : "Rejected"}`,
-          `Transaction is ${isVerified===1 ? "Verified" : "Rejected"}`,
+          `${isVerified === 1 ? "Verified" : "Rejected"}`,
+          `Transaction is ${isVerified === 1 ? "Verified" : "Rejected"}`,
           "success"
         );
       } else if (status === 226) {
@@ -199,8 +199,7 @@ const Datatable = () => {
                   <Button
                     variant="outlined"
                     onClick={() => submitTransaction(2, params.row.id)}
-                    color="error"
-                  >
+                    color="error">
                     <Cancel />
                   </Button>
                 </Tooltip>
@@ -208,8 +207,7 @@ const Datatable = () => {
                   <Button
                     variant="outlined"
                     onClick={() => setModal(true)}
-                    color="success"
-                  >
+                    color="success">
                     <CheckCircleOutlineIcon />
                   </Button>
                 </Tooltip>
@@ -217,8 +215,7 @@ const Datatable = () => {
                   open={modal}
                   onClose={handleClose}
                   aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
+                  aria-describedby="modal-modal-description">
                   <Box sx={style}>
                     <TextField
                       name="transactionId"
@@ -237,8 +234,7 @@ const Datatable = () => {
                       color="success"
                       onClick={() =>
                         submitTransaction(1, params.row.id, transactionId)
-                      }
-                    >
+                      }>
                       Submit
                     </Button>
                   </Box>
@@ -247,8 +243,7 @@ const Datatable = () => {
             ) : (
               <Button
                 variant="contained"
-                color={params.row.isVerified === 1 ? "success" : "error"}
-              >
+                color={params.row.isVerified === 1 ? "success" : "error"}>
                 {params.row.isVerified === 1 ? "Accepted" : "Rejected"}
               </Button>
             )}
@@ -294,6 +289,16 @@ const Datatable = () => {
   let url = prodUrl + location.pathname;
   let event = location.state;
   useEffect(() => {
+    const update = () => {
+      fetch(url, requestOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          setNewData(data.map((e, i) => ({ ...e, id: i + 1 })));
+          setLoading(false);
+        })
+        .catch((error) => console.log("error", error));
+    };
     update();
   }, [url]);
 
@@ -317,16 +322,14 @@ const Datatable = () => {
       />
       <Backdrop
         sx={{ color: "#7451f8", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={paymentLoading}
-      >
+        open={paymentLoading}>
         <CircularProgress color="inherit" />
       </Backdrop>
     </div>
   ) : (
     <Backdrop
       sx={{ color: "#7451f8", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      open={loading}
-    >
+      open={loading}>
       <CircularProgress color="inherit" />
     </Backdrop>
   );
