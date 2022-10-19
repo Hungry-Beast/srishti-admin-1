@@ -185,6 +185,7 @@ const ClubEvent = () => {
       .then((response) => response.json())
       .then((result) => {
         setLoading(false);
+        setOpenBd(true)
       })
       .catch((error) => {
         setLoading(false);

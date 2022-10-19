@@ -163,7 +163,7 @@ const Single1 = () => {
                 return (
 
                   <div className="card" key={i} >
-                    <div style={{ display: 'flex', flexDirection: 'column', margin: '2em 3em' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', margin: '1rem 2rem' }}>
                       <h1 className="title">Information</h1>
 
                       <div className="item">
@@ -192,7 +192,7 @@ const Single1 = () => {
                     <div className="head" style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <CardActions>
                         <Button
-                          onClick={() => deleteEvent(ele._id)}
+                          onClick={() => deleteEvent(ele["_id"])}
                           sx={{ color: "#6439ff", borderColor: "#6439ff" }}
                           variant="outlined"
                         >
@@ -202,7 +202,7 @@ const Single1 = () => {
                       <CardActions>
                         <Button
                           onClick={() =>
-                            navigate(`/registration/${ele._id}`, {
+                            navigate(`/registration/${ele["_id"]}`, {
                               state: ele,
                             })
                           }
