@@ -28,9 +28,6 @@ function App() {
     <div className={darkMode ? "app dark" : "app"}>
       <BrowserRouter>
         <Routes>
-          {/* <Route path="/">
-            <Route path="login" element={<Login />} />
-          </Route> */}
           <Route path="/login" element={<Login />} />
 
           <Route exact path='/edit' element={<EditEvent />} />
@@ -39,17 +36,12 @@ function App() {
           <Route
             path="/createClub"
             element={
-              // <RequireAuth>
               <CreateClub />
-              // </RequireAuth>
             }
           />
           <Route path="/clubEvent" element={<ClubEvent />} />
 
-          {/* <Route
-            path="/"
-            element={<Navigate to={admin.current ? "/home" : "/login"} />}
-          /> */}
+          
           <Route
             path="/"
             element={<Home />}
