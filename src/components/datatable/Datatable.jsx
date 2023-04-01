@@ -199,7 +199,8 @@ const Datatable = () => {
                   <Button
                     variant="outlined"
                     onClick={() => submitTransaction(2, params.row.id)}
-                    color="error">
+                    color="error"
+                  >
                     <Cancel />
                   </Button>
                 </Tooltip>
@@ -207,7 +208,8 @@ const Datatable = () => {
                   <Button
                     variant="outlined"
                     onClick={() => setModal(true)}
-                    color="success">
+                    color="success"
+                  >
                     <CheckCircleOutlineIcon />
                   </Button>
                 </Tooltip>
@@ -215,7 +217,8 @@ const Datatable = () => {
                   open={modal}
                   onClose={handleClose}
                   aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description">
+                  aria-describedby="modal-modal-description"
+                >
                   <Box sx={style}>
                     <TextField
                       name="transactionId"
@@ -234,7 +237,8 @@ const Datatable = () => {
                       color="success"
                       onClick={() =>
                         submitTransaction(1, params.row.id, transactionId)
-                      }>
+                      }
+                    >
                       Submit
                     </Button>
                   </Box>
@@ -243,7 +247,154 @@ const Datatable = () => {
             ) : (
               <Button
                 variant="contained"
-                color={params.row.isVerified === 1 ? "success" : "error"}>
+                color={params.row.isVerified === 1 ? "success" : "error"}
+              >
+                {params.row.isVerified === 1 ? "Accepted" : "Rejected"}
+              </Button>
+            )}
+          </>
+        );
+      },
+    },
+  ];
+  const userColumnsTeam = [
+    { field: "id", headerName: "ID", width: 70 },
+    {
+      field: "user",
+      headerName: "Team Leader",
+      width: 230,
+      renderCell: (params) => {
+        return (
+          <div className="cellWithImg">
+            <img
+              className="cellImg"
+              src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+              alt="avatar"
+            />
+            {params.row.name}
+          </div>
+        );
+      },
+    },
+    {
+      field: "users",
+      headerName: "Team Members",
+      width: 230,
+      renderCell: (params) => {
+        return (
+          <div className="cellWithImg">
+            <img
+              className="cellImg"
+              src="https://images.pexels.com/photos/1820770/pexels-photo-1820770.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+              alt="avatar"
+            />
+            {params.row.names.map((ele) => ele + ", ")}
+          </div>
+        );
+      },
+    },
+    {
+      field: "phoneNo",
+      headerName: "Phone No.",
+      width: 230,
+    },
+
+    {
+      field: "regNo",
+      headerName: "Registration No.",
+      width: 230,
+    },
+    {
+      field: "eventName",
+      headerName: "Event Name",
+      width: 230,
+    },
+
+    {
+      field: "date",
+      headerName: "Date",
+      width: 110,
+    },
+    {
+      field: "screenshot",
+      headerName: "Screenshot",
+      width: 110,
+      renderCell: (params) => {
+        return (
+          // <div className="cellWithImg">
+          <a href={params.row.screenshot || "/images"} target="_blank">
+            <img
+              className="cellImg"
+              src={params.row.screenshot || "/images/favicon.ico"}
+            />
+          </a>
+          // </div>
+        );
+      },
+    },
+    {
+      field: "isVerified",
+      headerName: "Is Verified",
+      width: 150,
+      renderCell: (params) => {
+        return (
+          <>
+            {params.row.isVerified === 0 ? (
+              <VerifyDiv>
+                <Tooltip title="Reject">
+                  <Button
+                    variant="outlined"
+                    onClick={() => submitTransaction(2, params.row.id)}
+                    color="error"
+                  >
+                    <Cancel />
+                  </Button>
+                </Tooltip>
+                <Tooltip title="Accept">
+                  <Button
+                    variant="outlined"
+                    onClick={() => setModal(true)}
+                    color="success"
+                  >
+                    <CheckCircleOutlineIcon />
+                  </Button>
+                </Tooltip>
+                <Modal
+                  open={modal}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style}>
+                    <TextField
+                      name="transactionId"
+                      label="Transaction Id"
+                      variant="outlined"
+                      value={transactionId}
+                      onChange={(e) => {
+                        setTransactionId(e.target.value);
+                      }}
+                      required
+                    />
+
+                    <Button
+                      sx={{ margin: "1rem 0 !important" }}
+                      variant="contained"
+                      color="success"
+                      onClick={() =>
+                        submitTransaction(1, params.row.id, transactionId)
+                      }
+                    >
+                      Submit
+                    </Button>
+                  </Box>
+                </Modal>
+              </VerifyDiv>
+            ) : (
+              <Button
+                variant="contained"
+                color={params.row.isVerified === 1 ? "success" : "error"}
+              >
                 {params.row.isVerified === 1 ? "Accepted" : "Rejected"}
               </Button>
             )}
@@ -264,12 +415,20 @@ const Datatable = () => {
 
     const title = `Event Name::${event.name}`;
     const headers = [["NAME", "RegNo", "Phone No"]];
+    const teamHeaders = [["Team Leader", "RegNo", "Phone No","Other members"]];
+    let data=[]
+    if(event.isTeamEvent){
+       data = newData.map((elt) => [elt.name, elt.regNo, elt.phoneNo,elt.names.map((ele)=>ele+", ")]);
 
-    const data = newData.map((elt) => [elt.name, elt.regNo, elt.phoneNo]);
+    }
+    else{
+
+       data = newData.map((elt) => [elt.name, elt.regNo, elt.phoneNo]);
+    }
 
     let content = {
       startY: 50,
-      head: headers,
+      head:event.isTeamEvent?teamHeaders: headers,
       body: data,
     };
 
@@ -316,20 +475,22 @@ const Datatable = () => {
       <DataGrid
         className="datagrid"
         rows={newData}
-        columns={event?.isPaid ? userColumnsPaid : userColumns}
+        columns={event.isTeamEvent?userColumnsTeam :event?.isPaid ?  userColumnsPaid: userColumns}
         pageSize={9}
         rowsPerPageOptions={[9]}
       />
       <Backdrop
         sx={{ color: "#7451f8", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={paymentLoading}>
+        open={paymentLoading}
+      >
         <CircularProgress color="inherit" />
       </Backdrop>
     </div>
   ) : (
     <Backdrop
       sx={{ color: "#7451f8", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      open={loading}>
+      open={loading}
+    >
       <CircularProgress color="inherit" />
     </Backdrop>
   );

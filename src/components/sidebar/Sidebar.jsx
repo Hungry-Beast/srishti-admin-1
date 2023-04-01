@@ -17,7 +17,7 @@ const Sidebar = () => {
   const [clubsList, setclubsList] = useState([]);
   const navigate = useNavigate();
   useEffect(async () => {
-    const response = await fetch(`${prodUrl}/clubs`, { method: "GET" });
+    const response = await fetch(`${prodUrl}/clubs/admin`, { method: "GET" });
     const json = await response.json();
     setclubsList(json);
   }, []);

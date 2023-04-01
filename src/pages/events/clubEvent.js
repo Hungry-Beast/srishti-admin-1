@@ -95,6 +95,7 @@ const ClubEvent = () => {
   const [clubData, setClubData] = useState([]);
   const [userCurrent, setUser] = useState();
   const [openBd, setOpenBd] = useState(false);
+  const [isTeamEvent, setIsTeamEvent] = useState(false)
   const handleOpen = () => {
     setOpenBd(true);
   };
@@ -112,7 +113,7 @@ const ClubEvent = () => {
   }, []);
 
   const getClub = () => {
-    fetch(prodUrl + "/clubs")
+    fetch(prodUrl + "/clubs/admin")
       .then((data) => data.json())
       .then((data) => {
         let clubsList = [];
@@ -173,6 +174,8 @@ const ClubEvent = () => {
     formdata.append("isMainEvent", isMainEvent);
     formdata.append("differentPrice", differentPrice);
     formdata.append("otherPrice", otherPrice);
+    formdata.append("isTeamEvent", isTeamEvent);
+    formdata.append("teamSize", e.target.teamSize.value);
 
     var requestOptions = {
       method: "POST",
@@ -223,6 +226,10 @@ const ClubEvent = () => {
   const handleDifferentPrice = (e) => {
     // console.log(e)
     setDifferentPrice(e.target.checked);
+  };
+  const handleTeamEvent = (e) => {
+    // console.log(e)
+    setIsTeamEvent(e.target.checked);
   };
   // console.log(paid)
   const handleOtherPriceChange = (e) => {
@@ -497,6 +504,51 @@ const ClubEvent = () => {
                 placeholder="Enter Price for Others"
                 variant="outlined"
                 onChange={handleOtherPriceChange}
+                fullWidth
+                onWheel={(e) => e.target.blur()}
+
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              // sx={{ margin: "10px auto", display: isTeamEvent ? "block" : "none" }}
+            >
+              <FormControlLabel
+                control={
+                  <Switch
+                    name="isMainEvent"
+                    value={isTeamEvent}
+                    onChange={handleTeamEvent}
+                    inputProps={{ "aria-label": "controlled" }}
+                  />
+                }
+                label={
+                  isTeamEvent
+                    ? "It is a team event"
+                    : "It is a solo event"
+                }
+                ref={pd}
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                margin: "10px auto",
+                minHeight: "4.2rem",
+              }}
+            >
+              <Paid
+                type="number"
+                paid={isTeamEvent && isTeamEvent}
+                name="teamSize"
+                label="Maximum Number of members"
+                // value={teamS}
+                required={(isTeamEvent)  ? true : false}
+                placeholder="Maximum Number of members"
+                variant="outlined"
+                // onChange={handleOtherPriceChange}
                 fullWidth
                 onWheel={(e) => e.target.blur()}
 
