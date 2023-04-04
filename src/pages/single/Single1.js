@@ -345,7 +345,7 @@ const Single1 = () => {
                           Description
                         </Button>
                       </CardActions>
-                      <CardActions>
+                      {/* <CardActions>
                         <Button
                           onClick={() => editEvent(ele)}
                           sx={{ color: "#6439ff", borderColor: "#6439ff" }}
@@ -353,7 +353,7 @@ const Single1 = () => {
                         >
                           Edit
                         </Button>
-                      </CardActions>
+                      </CardActions> */}
                     </div>
                   </div>
                 );

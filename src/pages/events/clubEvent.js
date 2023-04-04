@@ -95,7 +95,7 @@ const ClubEvent = () => {
   const [clubData, setClubData] = useState([]);
   const [userCurrent, setUser] = useState();
   const [openBd, setOpenBd] = useState(false);
-  const [isTeamEvent, setIsTeamEvent] = useState(false)
+  const [isTeamEvent, setIsTeamEvent] = useState(false);
   const handleOpen = () => {
     setOpenBd(true);
   };
@@ -152,6 +152,9 @@ const ClubEvent = () => {
     const newSelectedTime = hrs + ":" + mins;
     const selectedClub = clubData.find((clubData) => clubData.value === club);
     var formdata = new FormData();
+    // const quill = quillRef.current.getEditor();
+    // const content = quill.root.innerHTML;
+    // // console.log(content);
     formdata.append("name", e.target.name.value);
 
     formdata.append("date", selectedDate);
@@ -166,14 +169,13 @@ const ClubEvent = () => {
     formdata.append("file", e.target.pic.files[0]);
 
     formdata.append("venue", e.target.venue.value);
+    formdata.append("link", e.target.link.value);
     if (paid) {
       formdata.append("isPaid", paid);
-      formdata.append("price", price);
+      formdata.append("priceO", price);
     }
     formdata.append("isOpen", checked);
     formdata.append("isMainEvent", isMainEvent);
-    formdata.append("differentPrice", differentPrice);
-    formdata.append("otherPrice", otherPrice);
     formdata.append("isTeamEvent", isTeamEvent);
     formdata.append("teamSize", e.target.teamSize.value);
 
@@ -188,7 +190,7 @@ const ClubEvent = () => {
       .then((response) => response.json())
       .then((result) => {
         setLoading(false);
-        setOpenBd(true)
+        setOpenBd(true);
       })
       .catch((error) => {
         setLoading(false);
@@ -235,6 +237,9 @@ const ClubEvent = () => {
   const handleOtherPriceChange = (e) => {
     setOtherPrice(e.target.value);
   };
+  const [editorState, setEditorState] = useState('');
+  const quillRef = useRef(null);
+  
   const action = (
     <React.Fragment>
       <Link to="/home">
@@ -287,7 +292,7 @@ const ClubEvent = () => {
                 placeholder="Enter Name"
                 variant="outlined"
                 fullWidth
-              // required
+                // required
               />
             </Grid>
 
@@ -363,7 +368,18 @@ const ClubEvent = () => {
                 placeholder="Enter the venue"
                 variant="outlined"
                 fullWidth
-              // required
+                // required
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                sx={{ margin: "10px auto" }}
+                name="link"
+                label="Youtube Link"
+                placeholder="Enter the Youtube Link"
+                variant="outlined"
+                fullWidth
+                // required
               />
             </Grid>
 
@@ -381,6 +397,7 @@ const ClubEvent = () => {
                 modules={modules("t1")}
                 formats={formats}
               />
+               {/* <button type="button" onClick={handleGetContent}>Get Content</button> */}
             </Grid>
 
             <Grid item xs={12}>
@@ -464,51 +481,7 @@ const ClubEvent = () => {
                 onWheel={(e) => e.target.blur()}
               />
             </Grid>
-            <Grid
-              item
-              xs={12}
-              sx={{ margin: "10px auto", display: paid ? "block" : "none" }}
-            >
-              <FormControlLabel
-                control={
-                  <Switch
-                    name="differentPrice"
-                    value={differentPrice}
-                    onChange={handleDifferentPrice}
-                    inputProps={{ "aria-label": "controlled" }}
-                  />
-                }
-                label={
-                  differentPrice
-                    ? "Price is different for other"
-                    : "Price is same for other"
-                }
-                ref={pd}
-              />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              sx={{
-                margin: "10px auto",
-                minHeight: "4.2rem",
-              }}
-            >
-              <Paid
-                type="number"
-                paid={paid && differentPrice}
-                name="otherPrice"
-                label="otherPrice"
-                value={otherPrice}
-                required={(paid && differentPrice) ? true : false}
-                placeholder="Enter Price for Others"
-                variant="outlined"
-                onChange={handleOtherPriceChange}
-                fullWidth
-                onWheel={(e) => e.target.blur()}
 
-              />
-            </Grid>
             <Grid
               item
               xs={12}
@@ -524,9 +497,7 @@ const ClubEvent = () => {
                   />
                 }
                 label={
-                  isTeamEvent
-                    ? "It is a team event"
-                    : "It is a solo event"
+                  isTeamEvent ? "It is a team event" : "It is a solo event"
                 }
                 ref={pd}
               />
@@ -545,13 +516,12 @@ const ClubEvent = () => {
                 name="teamSize"
                 label="Maximum Number of members"
                 // value={teamS}
-                required={(isTeamEvent)  ? true : false}
+                required={isTeamEvent ? true : false}
                 placeholder="Maximum Number of members"
                 variant="outlined"
                 // onChange={handleOtherPriceChange}
                 fullWidth
                 onWheel={(e) => e.target.blur()}
-
               />
             </Grid>
             <Grid item xs={12} sx={{ margin: "10px auto" }}>
