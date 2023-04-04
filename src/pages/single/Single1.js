@@ -40,7 +40,7 @@ const Single1 = () => {
       })
       .catch((error) => console.log("error", error));
     console.log(eventList);
-  }, [url]);
+  }, []);
 
   // const editRequest = (id, formdata) => {
 
@@ -99,11 +99,21 @@ const Single1 = () => {
     fetch(`${prodUrl}/events/admin/${ele.club}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(result);
-        newEle = result.filter((e) => ele._id === e._id);
-        newEle = newEle[0];
+        // console.log(result, ele._id);
+        result.forEach(element => {
+
+          element.forEach(e => {
+            if (ele._id === e._id)
+              newEle = e
+
+          });
+        });
+        // newEle = result.filter((e) => ele._id === e._id);
+
+        // newEle = newEle[0];
         navigate("/edit", {
-          state: [newEle, eventList],
+          // state: [newEle, eventList]
+          state: [newEle, eventList]
         });
       })
       .catch((error) => console.log("error", error));
@@ -125,7 +135,6 @@ const Single1 = () => {
         const a = eventList.filter((e) => e._id !== result.event._id);
         console.log(
           eventList.filter((e) => e._id !== result.event._id),
-          a
         );
         setEventList(a);
       })
@@ -265,7 +274,7 @@ const Single1 = () => {
                 zIndex: (theme) => theme.zIndex.drawer + 1,
               }}
               open={loading}
-              // onClick={handleClose}
+            // onClick={handleClose}
             >
               <CircularProgress color="inherit" />
             </Backdrop>
@@ -372,7 +381,7 @@ const Single1 = () => {
                 zIndex: (theme) => theme.zIndex.drawer + 1,
               }}
               open={loading}
-              // onClick={handleClose}
+            // onClick={handleClose}
             >
               <CircularProgress color="inherit" />
             </Backdrop>

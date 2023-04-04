@@ -56,7 +56,8 @@ const EditElub = () => {
     console.log(location.state)
     stateEvent = location.state[0];
     setEventList = location?.state[1]
-    let eventList = location?.state[2]
+    console.log(stateEvent, setEventList)
+    // let eventList = location?.state[2]
     useEffect(() => {
         getClub();
         // if (stateEvent.isPaid) {
@@ -70,7 +71,7 @@ const EditElub = () => {
 
 
     const [userInfo, setuserInfo] = useState({
-        desc: stateEvent.desc
+        desc: stateEvent?.desc
     });
     const ondescription = (value) => {
         setuserInfo({
@@ -80,7 +81,7 @@ const EditElub = () => {
     };
     const newTime = moment().hours(Number(stateEvent?.time.slice(0, 2))).minute(Number(stateEvent?.time.slice(3, 5)))
 
-    const str = stateEvent.date;
+    const str = stateEvent?.date;
 
     const [day, month, year] = str.split('/');
 
@@ -90,6 +91,7 @@ const EditElub = () => {
     const [date, setDate] = useState(newDate);
     console.log(stateEvent.isOpen)
     const [time, setTime] = useState(newTime);
+    // const [club, setClub] = useState(stateEvent?.clubName);
     const [club, setClub] = useState(stateEvent?.club);
     const [checked, setChecked] = useState(stateEvent.isOpen);
     const [paid, setPaid] = useState(stateEvent.isPaid);
@@ -270,21 +272,25 @@ const EditElub = () => {
     };
 
     const getClub = () => {
-        fetch(prodUrl + "/clubs")
+        fetch(prodUrl + "/clubs/admin")
             .then((data) => data.json())
             .then((data) => {
+                console.log(data)
                 let clubsList = [];
-                data.map((club) => {
+                data.forEach((club) => {
                     clubsList.push({
                         label: club.name,
                         value: club["_id"],
                     });
+
                 });
+                console.log(clubsList)
                 setClubData(clubsList);
             });
     };
     const handleOpen = () => {
         setOpenBd(true);
+        ;
     };
 
     const handleClose = (event, reason) => {
